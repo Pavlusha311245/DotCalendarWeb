@@ -1,8 +1,6 @@
 {
   "name": "dot-calendar",
   "scripts": {
-    "build-tailwind": "pnpx tailwindcss -i ./src/css/main.css -o ./dist/output.css",
-    "dev-tailwind": "pnpx tailwindcss -i ./src/css/main.css -o ./dist/output.css --watch",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
