@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "build": "pnpx tailwindcss -i ./src/css/main.css -o ./dist/output.css",
+    "dev": "pnpx tailwindcss -i ./src/css/main.css -o ./dist/output.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.3"
+  }
+}
