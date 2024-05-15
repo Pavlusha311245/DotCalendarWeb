@@ -4,35 +4,52 @@ import {
     addYears,
     startOfWeek,
     endOfWeek
-} from 'https://cdn.jsdelivr.net/npm/date-fns@3.6.0/+esm';
+} from 'date-fns';
 
-const calculateYearWeeks = (year) => {
+type YearWeeks = {
+    year: number;
+    weeksCount: number;
+};
+
+const calculateYearWeeks = (year: number): YearWeeks => {
     const startOfYear = startOfWeek(new Date(year, 0, 1));
     const endOfYear = endOfWeek(new Date(year, 11, 31));
     const weeksCount = differenceInWeeks(endOfYear, startOfYear);
-    return {year, weeksCount: weeksCount};
+    return {year, weeksCount};
 };
 
-const calculateWeeksInYears = (startDate, endDate) => {
-    const years = Array.from({length: endDate.getFullYear() - startDate.getFullYear() + 1}, (_, idx) => idx + startDate.getFullYear());
+const calculateWeeksInYears = (startDate: Date, endDate: Date): YearWeeks[] => {
+    const years = Array.from(
+        {length: endDate.getFullYear() - startDate.getFullYear() + 1},
+        (_, idx) => idx + startDate.getFullYear()
+    );
     return years.map(calculateYearWeeks);
 };
 
-const createElementWithClass = (tagName, className, textContent) => {
+const createElementWithClass = (
+    tagName: string,
+    className: string,
+    textContent: string
+): HTMLElement => {
     const element = document.createElement(tagName);
     element.className = className;
     element.textContent = textContent;
     return element;
 };
 
-const generateDivElement = (year, weeksCount, dob, currentDate) => {
-    const divElement = createElementWithClass('div', 'mt-5 flex flex-wrap gap-3');
+const generateDivElement = (
+    year: number,
+    weeksCount: number,
+    dob: Date,
+    currentDate: Date
+): HTMLElement => {
+    const divElement = createElementWithClass('div', 'mt-5 flex flex-wrap gap-3', '');
     divElement.id = `year${year}`;
     for (let i = 0; i < weeksCount; i++) {
-        const weekDiv = createElementWithClass('div', 'w-4 h-4 border-4 border-black rounded');
+        const weekDiv = createElementWithClass('div', 'w-4 h-4 border-4 border-black rounded', '');
         const weekDate = addWeeks(new Date(year, 0, 1), i);
         if (weekDate < dob) {
-            weekDiv.classList.add('bg-gray-400'); // Красим в серый цвет недели до даты рождения
+            weekDiv.classList.add('bg-gray-400');
         } else {
             weekDiv.classList.add((weekDate <= currentDate) ? 'bg-red-500' : 'bg-green-600');
         }
@@ -41,9 +58,9 @@ const generateDivElement = (year, weeksCount, dob, currentDate) => {
     return divElement;
 };
 
-const generateYearsList = (yearsAndWeeks, nowDate, dob) => {
-    const yearsList = document.getElementById('yearsList');
-    yearsList.innerHTML = ''; //This line will clear the yearsList
+const generateYearsList = (yearsAndWeeks: YearWeeks[], nowDate: Date, dob: Date): void => {
+    const yearsList = document.getElementById('yearsList') as HTMLElement;
+    yearsList.innerHTML = '';
     yearsAndWeeks.forEach(({year, weeksCount}) => {
         const yearElement = createElementWithClass('h2', 'text-xl font-bold text-center', year.toString());
         const flexDivElement = generateDivElement(year, weeksCount, dob, nowDate);
@@ -53,7 +70,13 @@ const generateYearsList = (yearsAndWeeks, nowDate, dob) => {
     });
 };
 
-const calculatePassedAndRemainingWeeks = (yearsAndWeeks, currentDate) => {
+type WeeksInfo = {
+    totalWeeks: number;
+    passedWeeks: number;
+    remainingWeeks: number;
+}
+
+const calculatePassedAndRemainingWeeks = (yearsAndWeeks: YearWeeks[], currentDate: Date): WeeksInfo => {
     let totalWeeks = 0;
     let passedWeeks = 0;
     for (let yearData of yearsAndWeeks) {
@@ -66,10 +89,10 @@ const calculatePassedAndRemainingWeeks = (yearsAndWeeks, currentDate) => {
         }
     }
     return {totalWeeks, passedWeeks, remainingWeeks: totalWeeks - passedWeeks};
-}
+};
 
-const handleDobChange = () => {
-    const inputDOB = document.getElementById("dob").value;
+const handleDobChange = (): void => {
+    const inputDOB = (document.getElementById("dob") as HTMLInputElement).value;
     const startDate = new Date(inputDOB);
     localStorage.setItem('dob', inputDOB);
     const endDate = addYears(startDate, 100);
@@ -79,19 +102,19 @@ const handleDobChange = () => {
     generateYearsList(yearsAndWeeks, nowDate, startDate);
 
     const weeksInfo = calculatePassedAndRemainingWeeks(yearsAndWeeks, nowDate);
-    let infoPassedElement = document.getElementById('infoPassed');
-    let infoRemainingElement = document.getElementById('infoRemaining');
+    let infoPassedElement = document.getElementById('infoPassed') as HTMLElement;
+    let infoRemainingElement = document.getElementById('infoRemaining') as HTMLElement;
 
     infoPassedElement.textContent = `Passed weeks: ${weeksInfo.passedWeeks}`;
     infoRemainingElement.textContent = `Remaining weeks: ${weeksInfo.remainingWeeks}`;
-}
+};
 
-document.querySelector('#dob').addEventListener('change', handleDobChange)
+(document.querySelector('#dob') as HTMLInputElement).addEventListener('change', handleDobChange);
 
-window.onload = function () {
+window.onload = function (): void {
     const storedDOB = localStorage.getItem('dob');
     if (storedDOB) {
-        document.getElementById("dob").value = storedDOB;
+        (document.getElementById("dob") as HTMLInputElement).value = storedDOB;
         handleDobChange();
     }
 };
