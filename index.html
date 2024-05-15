@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>It's time to live</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<main>
+    <section class="min-h-screen bg-gray-200 py-10">
+        <div class="max-w-2xl mx-auto">
+            <div class="flex justify-center items-center space-x-2">
+                <label for="dob">Enter your date of birth:</label>
+                <input type="date" id="dob" class="rounded py-2 px-3" name="dob">
+                <button id="submitDob">Submit</button>
+            </div>
+            <div id="yearsList" class="mt-10 space-y-5">
+            </div>
+        </div>
+    </section>
+</main>
+
+<script type="module">
+    import {
+        differenceInWeeks,
+        addWeeks,
+        addYears,
+        startOfWeek,
+        endOfWeek
+    } from 'https://cdn.jsdelivr.net/npm/date-fns@3.6.0/+esm'
+
+    const calculateWeeksInYears = (startDate, endDate) => {
+        let yearsAndWeeks = {};
+        for (let year = startDate.getFullYear(); year <= endDate.getFullYear(); year++) {
+            let startOfYear = startOfWeek(new Date(year, 0, 1));
+            let endOfYear = endOfWeek(new Date(year, 11, 31));
+            let weeksCount = differenceInWeeks(endOfYear, startOfYear);
+            yearsAndWeeks[year] = {weeksCount: weeksCount};
+        }
+        return yearsAndWeeks;
+    }
+
+    const generateYearsList = (yearsAndWeeks, nowDate) => {
+        let yearsList = document.getElementById('yearsList');
+        Object.keys(yearsAndWeeks).forEach(year => {
+            let outerDivElement = document.createElement('div');
+            let h2Element = document.createElement('h2');
+            h2Element.setAttribute("class", "text-xl font-bold text-center");
+            h2Element.textContent = year;
+            outerDivElement.appendChild(h2Element);
+            let flexDivElement = document.createElement('div');
+            flexDivElement.className = 'mt-5 flex flex-wrap gap-3';
+            flexDivElement.id = `year${year}`
+            for (let i = 0; i < yearsAndWeeks[year].weeksCount; i++) {
+                let innerDivElement = document.createElement('div');
+                let weekDate = addWeeks(new Date(year, 0, 1), i);
+                innerDivElement.className = 'w-4 h-4 border-4 border-black rounded '
+                    + (weekDate <= nowDate ? 'bg-red-500' : 'bg-green-600');
+                flexDivElement.appendChild(innerDivElement);
+            }
+            outerDivElement.appendChild(flexDivElement);
+            yearsList.appendChild(outerDivElement);
+        });
+
+        document.getElementById(nowDate.getFullYear().toString()).scrollIntoView();
+    }
+
+
+    document.getElementById("submitDob").addEventListener("click", function () {
+        const inputDOB = document.getElementById("dob").value;
+        const startDate = new Date(inputDOB);
+
+        localStorage.setItem('dob', inputDOB);
+
+        const endDate = addYears(startDate, 100);
+        const nowDate = new Date();
+        const yearsAndWeeks = calculateWeeksInYears(startDate, endDate);
+        generateYearsList(yearsAndWeeks, nowDate);
+    });
+
+
+    window.onload = function () {
+        const storedDOB = localStorage.getItem('dob');
+        if (storedDOB) {
+            document.getElementById("dob").value = storedDOB;
+        }
+        const startDate = new Date(storedDOB);
+
+        const endDate = addYears(startDate, 100);
+        const nowDate = new Date();
+        const yearsAndWeeks = calculateWeeksInYears(startDate, endDate);
+        generateYearsList(yearsAndWeeks, nowDate);
+    };
+</script>
+</body>
+</html>
