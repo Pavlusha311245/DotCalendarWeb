@@ -49,8 +49,15 @@ const generateDivElement = (
         const weekDate: Date = addWeeks(new Date(year, 0, 1), i);
         if (weekDate < dob) {
             weekDiv.classList.add('bg-gray-400');
+            weekDiv.classList.add('hover:bg-gray-600');
         } else {
-            weekDiv.classList.add((weekDate <= currentDate) ? 'bg-red-500' : 'bg-green-600');
+            if (weekDate <= currentDate) {
+                weekDiv.classList.add('bg-red-500');
+                weekDiv.classList.add('hover:bg-red-800');
+            } else {
+                weekDiv.classList.add('bg-green-600');
+                weekDiv.classList.add('hover:bg-green-500');
+            }
         }
         divElement.appendChild(weekDiv);
     }
