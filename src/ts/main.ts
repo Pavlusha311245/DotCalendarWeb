@@ -11,6 +11,12 @@ type YearWeeks = {
     weeksCount: number;
 };
 
+type WeeksInfo = {
+    totalWeeks: number;
+    passedWeeks: number;
+    remainingWeeks: number;
+}
+
 const calculateYearWeeks = (year: number): YearWeeks => {
     const startOfYear: Date = startOfWeek(new Date(year, 0, 1));
     const endOfYear: Date = endOfWeek(new Date(year, 11, 31));
@@ -48,16 +54,11 @@ const generateDivElement = (
         const weekDiv: HTMLElement = createElementWithClass('div', 'w-full max-w-4 h-4 border-4 border-black rounded', '');
         const weekDate: Date = addWeeks(new Date(year, 0, 1), i);
         if (weekDate < dob) {
-            weekDiv.classList.add('bg-gray-400');
-            weekDiv.classList.add('hover:bg-gray-600');
+            weekDiv.classList.add('bg-gray-400', 'hover:bg-gray-600');
+        } else if (weekDate <= currentDate) {
+            weekDiv.classList.add('bg-red-500', 'hover:bg-red-800');
         } else {
-            if (weekDate <= currentDate) {
-                weekDiv.classList.add('bg-red-500');
-                weekDiv.classList.add('hover:bg-red-800');
-            } else {
-                weekDiv.classList.add('bg-green-600');
-                weekDiv.classList.add('hover:bg-green-500');
-            }
+            weekDiv.classList.add('bg-green-600', 'hover:bg-green-500');
         }
         divElement.appendChild(weekDiv);
     }
@@ -76,12 +77,6 @@ const generateYearsList = (yearsAndWeeks: YearWeeks[], nowDate: Date, dob: Date)
         yearsList.appendChild(outerDivElement);
     });
 };
-
-type WeeksInfo = {
-    totalWeeks: number;
-    passedWeeks: number;
-    remainingWeeks: number;
-}
 
 const calculatePassedAndRemainingWeeks = (yearsAndWeeks: YearWeeks[], currentDate: Date): WeeksInfo => {
     let totalWeeks: number = 0;
