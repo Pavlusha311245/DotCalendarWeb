@@ -43,9 +43,9 @@ const generateDivElement = (
     dob: Date,
     currentDate: Date
 ): HTMLElement => {
-    const divElement: HTMLElement = createElementWithClass('div', 'mt-5 flex flex-wrap gap-3', '');
+    const divElement: HTMLElement = createElementWithClass('div', 'mt-2 flex flex-wrap gap-1', '');
     for (let i: number = 0; i < weeksCount; i++) {
-        const weekDiv: HTMLElement = createElementWithClass('div', 'w-4 h-4 border-4 border-black rounded', '');
+        const weekDiv: HTMLElement = createElementWithClass('div', 'w-full max-w-4 h-4 border-4 border-black rounded', '');
         const weekDate: Date = addWeeks(new Date(year, 0, 1), i);
         if (weekDate < dob) {
             weekDiv.classList.add('bg-gray-400');
@@ -64,7 +64,7 @@ const generateYearsList = (yearsAndWeeks: YearWeeks[], nowDate: Date, dob: Date)
         const yearElement: HTMLElement = createElementWithClass('h2', 'text-xl font-bold text-center', year.toString());
         yearElement.id = `year${year}`;
         const flexDivElement: HTMLElement = generateDivElement(year, weeksCount, dob, nowDate);
-        const outerDivElement: HTMLElement = createElementWithClass('div', '', '');
+        const outerDivElement: HTMLElement = createElementWithClass('div', 'flex gap-5 items-center', '');
         outerDivElement.append(yearElement, flexDivElement);
         yearsList.appendChild(outerDivElement);
     });

@@ -18,35 +18,39 @@
             <!--            </div>-->
             <div></div>
             <div class="order-2">
-                <div class="flex justify-center items-center space-x-2">
-                    <label for="dob">Enter your date of birth:</label>
-                    <input type="date" id="dob" class="rounded py-2 px-3 bg-gray-300 dark:bg-gray-800 dark:text-gray-50" name="dob">
-                </div>
-
-                <div id="infoPassed" class="text-xl font-bold text-center mt-10"></div>
-                <div id="infoRemaining" class="text-xl font-bold text-center mt-2"></div>
-
-                <div id="yearsList" class="mt-10 space-y-5">
-                </div>
+                <div id="yearsList" class="mt-10 space-y-5"></div>
             </div>
             <div class="order-1 lg:order-last">
                 <div class="lg:sticky lg:top-5">
+
+
+
+                    <div class="flex justify-center items-center space-x-2">
+                        <label for="dob">Enter your date of birth:</label>
+                        <input type="date" id="dob" class="rounded py-2 px-3 bg-gray-300 dark:bg-gray-800 dark:text-gray-50" name="dob">
+                    </div>
+
                     <div class="space-y-3 mt-10">
                         <div class="flex items-center space-x-2">
-                            <div class="w-4 h-4 border-4 border-black rounded bg-red-500"></div>
+                            <div class="w-full h-4 max-w-4 border-4 border-black rounded bg-red-500"></div>
                             <p>This color represents the weeks you have lived</p>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <div class="w-4 h-4 border-4 border-black rounded bg-green-600"></div>
+                            <div class="w-full h-4 max-w-4 border-4 border-black rounded bg-green-600"></div>
                             <p>This color represents the weeks you have remaining if you live up to 100 years</p>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <div class="w-4 h-4 border-4 border-black rounded bg-gray-400"></div>
+                            <div class="w-full h-4 max-w-4 border-4 border-black rounded bg-gray-400"></div>
                             <p>This color represents the weeks you have not lived yet</p>
                         </div>
                     </div>
 
-                    <div class="flex flex-wrap gap-3 mt-5">
+                    <div>
+                        <div id="infoPassed" class="text-base lg:text-xl font-bold text-center mt-5"></div>
+                        <div id="infoRemaining" class="text-base lg:text-xl font-bold text-center mt-2"></div>
+                    </div>
+
+                    <div class="flex justify-center flex-wrap gap-3 mt-5">
                         <a href='#year2024' class="px-2 py-1 text-gray-50 bg-gray-800 rounded-lg">Go to current year</a>
                         <a href='#start' class="px-2 py-1 text-gray-50 bg-gray-800 rounded-lg">Go to start page</a>
                     </div>
