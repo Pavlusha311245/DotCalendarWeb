@@ -39,6 +39,10 @@ pnpm preview
 
 For production build recommended to use any static server, for example nginx
 
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the tags on this repository.
+
 ## Support
 
 The project is being developed with the support of IDE from JetBrains
