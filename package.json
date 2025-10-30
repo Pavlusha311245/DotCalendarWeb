@@ -1,6 +1,7 @@
 {
   "name": "dot-calendar",
   "license": "MIT",
+  "version": "0.2.0",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -15,7 +16,6 @@
     "typescript": "^5.9.3",
     "vite": "^5.4.21"
   },
-  "version": "0.1.0",
   "type": "module",
   "engines": {
     "node": ">=24",
