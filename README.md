@@ -9,7 +9,7 @@ transience of life, which allows you to make more global plans, because 1 point 
 
 ## Requirements
 
-- Node.js 21.0.0 or higher
+- Node.js 24.0.0 or higher
 - pnpm 9.0.0 or higher
 
 ### Installation

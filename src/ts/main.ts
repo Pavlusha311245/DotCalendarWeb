@@ -51,7 +51,7 @@ const generateDivElement = (
 ): HTMLElement => {
     const divElement: HTMLElement = createElementWithClass('div', 'mt-2 flex flex-wrap gap-1', '');
     for (let i: number = 0; i < weeksCount; i++) {
-        const weekDiv: HTMLElement = createElementWithClass('div', 'w-full max-w-4 h-4 border-4 border-black rounded', '');
+        const weekDiv: HTMLElement = createElementWithClass('div', 'w-full max-w-4 h-4 border-4 border-black rounded-sm', '');
         const weekDate: Date = addWeeks(new Date(year, 0, 1), i);
         if (weekDate < dob) {
             weekDiv.classList.add('bg-gray-400', 'hover:bg-gray-600');
