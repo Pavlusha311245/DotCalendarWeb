@@ -1,3 +1,9 @@
 .idea
+.vscode
 node_modules
 dist
+
+#ENV
+.env
+.env*.local
+.DS_Store

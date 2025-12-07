@@ -9,15 +9,14 @@ transience of life, which allows you to make more global plans, because 1 point 
 
 ## Requirements
 
-- Node.js 24.0.0 or higher
-- pnpm 9.0.0 or higher
+- Bun v1.0.0 or higher
 
 ### Installation
 
 Install the dependencies
 
 ```bash
-pnpm install
+bun install
 ```
 
 ### Usage (development)
@@ -25,7 +24,7 @@ pnpm install
 Run the development server
 
 ```bash
-pnpm dev
+bun run dev
 ```
 
 ### Usage (production)
@@ -33,11 +32,11 @@ pnpm dev
 Build the project and run the server
 
 ```bash
-pnpm build
-pnpm preview
+bun run build
+bun run preview
 ```
 
-For production build recommended to use any static server, for example nginx
+For production build recommended to use any static server, for example **Nginx**
 
 ## Versioning
 
