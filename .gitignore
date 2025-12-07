@@ -1,3 +1,17 @@
 .idea
+.vscode
 node_modules
 dist
+
+#ENV
+.env
+.env*.local
+.DS_Store
+
+# wrangler project
+
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
+.wrangler/

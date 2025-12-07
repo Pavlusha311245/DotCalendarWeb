@@ -25,7 +25,7 @@ const calculateYearWeeks = (year: number): YearWeeks => {
 };
 
 const calculateWeeksInYears = (startDate: Date, endDate: Date): YearWeeks[] => {
-    const years = Array.from(
+    const years: number[] = Array.from(
         {length: endDate.getFullYear() - startDate.getFullYear() + 1},
         (_, idx) => idx + startDate.getFullYear()
     );
@@ -50,15 +50,16 @@ const generateDivElement = (
     currentDate: Date
 ): HTMLElement => {
     const divElement: HTMLElement = createElementWithClass('div', 'mt-2 flex flex-wrap gap-1', '');
+
     for (let i: number = 0; i < weeksCount; i++) {
-        const weekDiv: HTMLElement = createElementWithClass('div', 'w-full max-w-4 h-4 border-4 border-black rounded-sm', '');
+        const weekDiv: HTMLElement = createElementWithClass('div', 'dot', '');
         const weekDate: Date = addWeeks(new Date(year, 0, 1), i);
         if (weekDate < dob) {
-            weekDiv.classList.add('bg-gray-400', 'hover:bg-gray-600');
+            weekDiv.classList.add('dot-gray');
         } else if (weekDate <= currentDate) {
-            weekDiv.classList.add('bg-red-500', 'hover:bg-red-800');
+            weekDiv.classList.add('dot-red');
         } else {
-            weekDiv.classList.add('bg-green-600', 'hover:bg-green-500');
+            weekDiv.classList.add('dot-green');
         }
         divElement.appendChild(weekDiv);
     }
@@ -68,25 +69,31 @@ const generateDivElement = (
 const generateYearsList = (yearsAndWeeks: YearWeeks[], nowDate: Date, dob: Date): void => {
     const yearsList: HTMLElement = document.getElementById('yearsList') as HTMLElement;
     yearsList.innerHTML = '';
+
+    const fragment: DocumentFragment = document.createDocumentFragment();
+
     yearsAndWeeks.forEach(({year, weeksCount}) => {
         const yearElement: HTMLElement = createElementWithClass('h2', 'text-xl font-bold text-center', year.toString());
         yearElement.id = `year${year}`;
         const flexDivElement: HTMLElement = generateDivElement(year, weeksCount, dob, nowDate);
         const outerDivElement: HTMLElement = createElementWithClass('div', 'flex gap-5 items-center', '');
         outerDivElement.append(yearElement, flexDivElement);
-        yearsList.appendChild(outerDivElement);
+
+        fragment.appendChild(outerDivElement)
     });
+
+    yearsList.appendChild(fragment)
 };
 
 const calculatePassedAndRemainingWeeks = (yearsAndWeeks: YearWeeks[], currentDate: Date): WeeksInfo => {
     let totalWeeks: number = 0;
     let passedWeeks: number = 0;
-    for (let yearData of yearsAndWeeks) {
+    for (const yearData of yearsAndWeeks) {
         totalWeeks += yearData.weeksCount;
         if (yearData.year < currentDate.getFullYear()) {
             passedWeeks += yearData.weeksCount;
         } else if (yearData.year == currentDate.getFullYear()) {
-            let startOfYear = startOfWeek(new Date(yearData.year, 0, 1));
+            const startOfYear = startOfWeek(new Date(yearData.year, 0, 1));
             passedWeeks += differenceInWeeks(currentDate, startOfYear);
         }
     }
@@ -104,8 +111,8 @@ const handleDobChange = (): void => {
     generateYearsList(yearsAndWeeks, nowDate, startDate);
 
     const weeksInfo: WeeksInfo = calculatePassedAndRemainingWeeks(yearsAndWeeks, nowDate);
-    let infoPassedElement: HTMLElement = document.getElementById('infoPassed') as HTMLElement;
-    let infoRemainingElement: HTMLElement = document.getElementById('infoRemaining') as HTMLElement;
+    const infoPassedElement: HTMLElement = document.getElementById('infoPassed') as HTMLElement;
+    const infoRemainingElement: HTMLElement = document.getElementById('infoRemaining') as HTMLElement;
 
     infoPassedElement.textContent = `Passed weeks: ${weeksInfo.passedWeeks}`;
     infoRemainingElement.textContent = `Remaining weeks: ${weeksInfo.remainingWeeks}`;
