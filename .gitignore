@@ -7,3 +7,11 @@ dist
 .env
 .env*.local
 .DS_Store
+
+# wrangler project
+
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
+.wrangler/
