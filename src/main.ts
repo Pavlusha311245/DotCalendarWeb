@@ -54,17 +54,38 @@ const generateDivElement = (
     for (let i: number = 0; i < weeksCount; i++) {
         const weekDiv: HTMLElement = createElementWithClass('div', 'dot', '');
         const weekDate: Date = addWeeks(new Date(year, 0, 1), i);
+        weekDiv.id = `week-${year}-${i + 1}`;
+
         if (weekDate < dob) {
             weekDiv.classList.add('dot-gray');
         } else if (weekDate <= currentDate) {
             weekDiv.classList.add('dot-red');
+            weekDiv.addEventListener('click', () => showWeekInfo(weekDiv.id));
         } else {
             weekDiv.classList.add('dot-green');
+            weekDiv.addEventListener('click', () => showWeekInfo(weekDiv.id));
         }
+
         divElement.appendChild(weekDiv);
     }
     return divElement;
 };
+
+const showWeekInfo = (id: string) => {
+    const dialog = document.getElementById("note-dialog") as HTMLDialogElement;
+
+    const localStorageData = localStorage.getItem(id) || "";
+
+    const textarea = dialog.querySelector("textarea") as HTMLTextAreaElement;
+    textarea!.value = localStorageData;
+
+    dialog.querySelector('#save-note')?.addEventListener('click', () => {
+        localStorage.setItem(id, textarea.value);
+        dialog.close();
+    })
+
+    dialog.showModal();
+}
 
 const generateYearsList = (yearsAndWeeks: YearWeeks[], nowDate: Date, dob: Date): void => {
     const yearsList: HTMLElement = document.getElementById('yearsList') as HTMLElement;
@@ -101,7 +122,7 @@ const calculatePassedAndRemainingWeeks = (yearsAndWeeks: YearWeeks[], currentDat
 };
 
 const handleDobChange = (): void => {
-    const inputDOB: string = (document.getElementById("dob") as HTMLInputElement).value;
+    const inputDOB: string = (document.getElementById("date-of-birth") as HTMLInputElement).value;
     const startDate: Date = new Date(inputDOB);
     localStorage.setItem('dob', inputDOB);
     const endDate: Date = addYears(startDate, 100);
@@ -111,19 +132,20 @@ const handleDobChange = (): void => {
     generateYearsList(yearsAndWeeks, nowDate, startDate);
 
     const weeksInfo: WeeksInfo = calculatePassedAndRemainingWeeks(yearsAndWeeks, nowDate);
-    const infoPassedElement: HTMLElement = document.getElementById('infoPassed') as HTMLElement;
-    const infoRemainingElement: HTMLElement = document.getElementById('infoRemaining') as HTMLElement;
 
+    const infoPassedElement: HTMLElement = document.getElementById('infoPassed') as HTMLElement;
     infoPassedElement.textContent = `Passed weeks: ${weeksInfo.passedWeeks}`;
+
+    const infoRemainingElement: HTMLElement = document.getElementById('infoRemaining') as HTMLElement;
     infoRemainingElement.textContent = `Remaining weeks: ${weeksInfo.remainingWeeks}`;
 };
 
-(document.querySelector('#dob') as HTMLInputElement).addEventListener('change', handleDobChange);
+(document.querySelector('#date-of-birth') as HTMLInputElement).addEventListener('change', handleDobChange);
 
 window.onload = function (): void {
     const storedDOB: string | null = localStorage.getItem('dob');
     if (storedDOB) {
-        (document.getElementById("dob") as HTMLInputElement).value = storedDOB;
+        (document.getElementById("date-of-birth") as HTMLInputElement).value = storedDOB;
         handleDobChange();
     }
 };
