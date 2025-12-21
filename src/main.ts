@@ -122,9 +122,14 @@ const calculatePassedAndRemainingWeeks = (yearsAndWeeks: YearWeeks[], currentDat
 };
 
 const handleDobChange = (): void => {
-    const inputDOB: string = (document.getElementById("date-of-birth") as HTMLInputElement).value;
-    const startDate: Date = new Date(inputDOB);
-    localStorage.setItem('dob', inputDOB);
+    const inputDateOfBirth: HTMLInputElement = (document.getElementById("date-of-birth") as HTMLInputElement);
+    const maxDate: string = new Date().toISOString().split("T")[0];
+    if (inputDateOfBirth.value > maxDate) {
+        inputDateOfBirth.value = maxDate
+    }
+
+    const startDate: Date = new Date(inputDateOfBirth.value);
+    localStorage.setItem('dob', inputDateOfBirth.value);
     const endDate: Date = addYears(startDate, 100);
     const nowDate: Date = new Date();
     const yearsAndWeeks: YearWeeks[] = calculateWeeksInYears(startDate, endDate);
@@ -143,9 +148,12 @@ const handleDobChange = (): void => {
 (document.querySelector('#date-of-birth') as HTMLInputElement).addEventListener('change', handleDobChange);
 
 window.onload = function (): void {
+    const inputDateOfBirth: HTMLInputElement = document.getElementById("date-of-birth") as HTMLInputElement
+    inputDateOfBirth.max = new Date().toISOString().split("T")[0];
+
     const storedDOB: string | null = localStorage.getItem('dob');
     if (storedDOB) {
-        (document.getElementById("date-of-birth") as HTMLInputElement).value = storedDOB;
+        inputDateOfBirth.value = storedDOB;
         handleDobChange();
     }
 };
