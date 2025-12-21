@@ -151,6 +151,11 @@ window.onload = function (): void {
     const inputDateOfBirth: HTMLInputElement = document.getElementById("date-of-birth") as HTMLInputElement
     inputDateOfBirth.max = new Date().toISOString().split("T")[0];
 
+    const currentYearLink = document.getElementById('current-year') as HTMLLinkElement;
+    const currentYear = new Date().getFullYear();
+    currentYearLink.href = `#year${currentYear}`;
+    currentYearLink.textContent = `${currentYear}`
+
     const storedDOB: string | null = localStorage.getItem('dob');
     if (storedDOB) {
         inputDateOfBirth.value = storedDOB;
