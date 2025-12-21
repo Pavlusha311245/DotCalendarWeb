@@ -1,5 +1,10 @@
 # CHANGELOG
 
+# v0.5.0 - [2025/12/21]
+
+- Update ui/ux design
+- Update images and icons
+
 # v0.4.1 - [2025/12/21]
 
 - Fix issue with glass effect

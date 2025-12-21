@@ -17,8 +17,12 @@
         scroll-behavior: smooth;
     }
 
+    .main-bg {
+        @apply bg-linear-to-r from-blue-900 to-cyan-700
+    }
+
     dialog::backdrop {
-        background-color: #5c5c5c94;
+        @apply bg-gray-900/30 backdrop-blur-sm;
     }
 
     dialog {
@@ -57,6 +61,16 @@
         @apply px-1 py-0.5 text-sm;
     }
 
+    .btn-glass {
+        @apply px-2 py-1
+        text-gray-100 bg-white/20
+        hover:bg-white/40 hover:text-gray-600
+        rounded-lg
+        shadow-[0_4px_30px_rgba(0,0,0,0.1)]
+        backdrop-blur-sm
+        transition-all duration-200 ease-in-out;
+    }
+
     input[type="date"] {
         @apply bg-gray-600 border-2 border-black p-2 rounded-xl;
     }
@@ -65,8 +79,12 @@
         @apply outline-none ring-2 ring-emerald-600;
     }
 
+    textarea:focus, input[type="text"]:focus, input[type="password"]:focus {
+        @apply outline-none ring-2 ring-emerald-600;
+    }
+
     .dot {
-        @apply w-full max-w-4 h-4 border-3 border-black rounded-sm;
+        @apply w-full max-w-4 h-4 border-3 border-gray-800 rounded-sm;
     }
 
     .dot-green {
@@ -74,7 +92,7 @@
     }
 
     .dot-red {
-        @apply bg-red-600 hover:bg-red-300 hover:cursor-pointer;
+        @apply bg-red-700 hover:bg-red-300 hover:cursor-pointer;
     }
 
     .dot-gray {
@@ -85,6 +103,7 @@
         position: fixed;
         animation: grow linear forwards;
         animation-timeline: scroll();
+        z-index: 9999;
 
         @apply h-2 w-0 fixed text-white bg-emerald-600 rounded-r-sm border-2 border-emerald-900;
     }
