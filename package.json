@@ -6,8 +6,8 @@
     "dev": "bunx --bun vite",
     "build": "bunx --bun vite build",
     "preview": "bunx --bun vite preview",
-    "lint": "eslint . --ext .ts --ext .js",
-    "lint:fix": "eslint . --ext .ts --ext .js --fix"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.17",

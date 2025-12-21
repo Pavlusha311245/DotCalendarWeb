@@ -37,7 +37,7 @@
     }
 
     .note-textarea {
-        @apply bg-gray-600 rounded-lg border-2 border-black p-3 text-white
+        @apply bg-gray-600 rounded-lg border-2 border-black p-3 text-white;
     }
 
     .glass {
@@ -55,35 +55,35 @@
         hover:bg-gray-50 hover:text-gray-600
         rounded-lg
         border-2 border-gray-900
-        transition-all duration-200 ease-in-out
+        transition-all duration-200 ease-in-out;
     }
 
     .btn-sm {
-        @apply px-1 py-0.5 text-sm
+        @apply px-1 py-0.5 text-sm;
     }
 
     input[type="date"] {
-        @apply bg-gray-600 border-2 border-black p-2 rounded-xl
+        @apply bg-gray-600 border-2 border-black p-2 rounded-xl;
     }
 
     input[type="date"]:focus {
-        @apply outline-none ring-2 ring-emerald-600
+        @apply outline-none ring-2 ring-emerald-600;
     }
 
     .dot {
-        @apply w-full max-w-4 h-4 border-3 border-black rounded-sm
+        @apply w-full max-w-4 h-4 border-3 border-black rounded-sm;
     }
 
     .dot-green {
-        @apply bg-emerald-600 hover:bg-emerald-300 hover:cursor-pointer
+        @apply bg-emerald-600 hover:bg-emerald-300 hover:cursor-pointer;
     }
 
     .dot-red {
-        @apply bg-red-600 hover:bg-red-300 hover:cursor-pointer
+        @apply bg-red-600 hover:bg-red-300 hover:cursor-pointer;
     }
 
     .dot-gray {
-        @apply bg-gray-600 hover:cursor-not-allowed
+        @apply bg-gray-600 hover:cursor-not-allowed;
     }
 
     .progress {
@@ -91,7 +91,7 @@
         animation: grow linear forwards;
         animation-timeline: scroll();
 
-        @apply h-2 w-0 fixed text-white bg-emerald-600 rounded-r-sm border-2 border-emerald-900
+        @apply h-2 w-0 fixed text-white bg-emerald-600 rounded-r-sm border-2 border-emerald-900;
     }
 
     @keyframes grow {
