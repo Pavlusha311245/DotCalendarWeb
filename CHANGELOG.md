@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v0.4.0 - [2025/12/21]
+
+- Update UI design for better user experience
+- Add possibility to write notes for each week
+
 ## v0.3.0 - [2025/12/07]
 
 - Added ESLint for code quality and consistency
