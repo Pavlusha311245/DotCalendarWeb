@@ -5,4 +5,8 @@ export default defineConfig({
     base: './',
     publicDir: 'public',
     plugins: [tailwindcss(),],
+    server: {
+        port: 5173,
+        strictPort: true
+    }
 });
