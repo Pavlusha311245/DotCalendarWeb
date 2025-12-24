@@ -18,7 +18,7 @@
     }
 
     .main-bg {
-        @apply bg-linear-to-r from-blue-900 to-cyan-700
+        @apply bg-linear-to-r from-slate-600 to-slate-500
     }
 
     dialog::backdrop {
@@ -41,11 +41,11 @@
     }
 
     .note-textarea {
-        @apply bg-gray-600 rounded-lg border-2 border-black p-3 text-white;
+        @apply bg-slate-500 rounded-lg p-3 text-white max-w-full m-1 drop-shadow;
     }
 
     .glass {
-        @apply bg-white/20 border border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-[5px];
+        @apply bg-white/20 border border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-sm;
     }
 
     .btn {
@@ -62,9 +62,29 @@
     }
 
     .btn-glass {
-        @apply px-2 py-1
+        @apply px-3 py-2 m-1 focus:outline-none focus:ring-2 focus:ring-slate-300
         text-gray-100 bg-white/20
         hover:bg-white/40 hover:text-gray-600
+        rounded-lg
+        shadow-[0_4px_30px_rgba(0,0,0,0.1)]
+        backdrop-blur-sm
+        transition-all duration-200 ease-in-out;
+    }
+
+    .btn-glass-primary {
+        @apply px-3 py-2 m-1 focus:outline-none focus:ring-2 focus:ring-slate-300
+        text-emerald-100 bg-emerald-600/20
+        hover:bg-emerald-600/40 hover:text-gray-600
+        rounded-lg
+        shadow-[0_4px_30px_rgba(0,0,0,0.1)]
+        backdrop-blur-sm
+        transition-all duration-200 ease-in-out;
+    }
+
+    .btn-glass-danger {
+        @apply px-3 py-2 m-1 focus:outline-none focus:ring-2 focus:ring-slate-300
+        text-rose-100 bg-rose-600/20
+        hover:bg-rose-600/40 hover:text-gray-600
         rounded-lg
         shadow-[0_4px_30px_rgba(0,0,0,0.1)]
         backdrop-blur-sm
@@ -80,23 +100,23 @@
     }
 
     textarea:focus, input[type="text"]:focus, input[type="password"]:focus {
-        @apply outline-none ring-2 ring-emerald-600;
+        @apply outline-none ring-2 ring-slate-300;
     }
 
     .dot {
-        @apply w-full max-w-4 h-4 border-3 border-gray-800 rounded-sm;
+        @apply w-full max-w-8 md:max-w-6 lg:max-w-4 h-8 md:h-6 lg:h-4 border-4 md:border-3 border-gray-800 rounded-lg md:rounded-sm;
     }
 
     .dot-green {
-        @apply bg-emerald-600 hover:bg-emerald-300 hover:cursor-pointer;
+        @apply bg-emerald-500 hover:bg-emerald-300 hover:cursor-pointer;
     }
 
     .dot-red {
-        @apply bg-red-700 hover:bg-red-300 hover:cursor-pointer;
+        @apply bg-rose-700 hover:bg-red-300 hover:cursor-pointer;
     }
 
     .dot-gray {
-        @apply bg-gray-600 hover:cursor-not-allowed;
+        @apply bg-slate-500 hover:cursor-not-allowed;
     }
 
     .progress {

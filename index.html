@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>It's time to live</title>
+    <title>DotCalendar | It's time to live</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Favicons -->
@@ -20,13 +20,13 @@
     <meta name="keywords" content="life calendar, life in weeks, time management, productivity, life visualization">
     <meta name="description" content="Visualize your life in weeks and make the most of your time.">
     <meta name="author" content="Pavel Zavadski">
-    <meta property="og:title" content="It's time to live">
+    <meta property="og:title" content="DotCalendar | It's time to live">
     <meta property="og:description" content="Visualize your life in weeks and make the most of your time.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://dotcalendar.pavlusha.me/">
     <meta property="og:image" content="https://dotcalendar.pavlusha.me/banner.webp">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="It's time to live">
+    <meta name="twitter:title" content="DotCalendar | It's time to live">
     <meta name="twitter:description" content="Visualize your life in weeks and make the most of your time.">
     <meta name="twitter:image" content="https://dotcalendar.pavlusha.me/banner.webp">
 
@@ -41,17 +41,13 @@
         <div class="container mx-auto px-5">
             <!--Years of Your Life-->
             <div class="order-2 flex flex-col gap-1 relative">
-                <div>
-                    <div id="infoPassed" class="text-base lg:text-xl font-bold text-center mt-5"></div>
-                    <div id="infoRemaining" class="text-base lg:text-xl font-bold text-center mt-2"></div>
-                </div>
 
                 <div id="yearsList" class="mt-10 mb-40 mx-auto space-y-5 relative"></div>
 
-                <div class="bottom-0 left-0 right-0 fixed flex flex-col justify-center items-center">
+                <div class="bottom-0 left-0 right-0 fixed flex flex-col justify-center items-center p-3">
                     <div class="px-3 rounded-lg flex justify-center flex-wrap gap-3">
-                        <a id="current-year" class="btn-glass btn-sm">Сurrent year</a>
-                        <a href='#start' class="btn-glass btn-sm">
+                        <a id="current-year" class="btn-glass btn-sm" title="Go to current year">Сurrent year</a>
+                        <a href='#start' class="btn-glass btn-sm" title="Go to top">
                             <svg class="w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                 <path fill="#f5f5f5"
                                       d="M342.6 81.4C330.1 68.9 309.8 68.9 297.3 81.4L137.3 241.4C124.8 253.9 124.8 274.2 137.3 286.7C149.8 299.2 170.1 299.2 182.6 286.7L288 181.3L288 552C288 569.7 302.3 584 320 584C337.7 584 352 569.7 352 552L352 181.3L457.4 286.7C469.9 299.2 490.2 299.2 502.7 286.7C515.2 274.2 515.2 253.9 502.7 241.4L342.7 81.4z"/>
@@ -59,25 +55,24 @@
                         </a>
                     </div>
 
-                    <div class="glass w-full max-w-md h-30 gap-3 p-3 m-5 mt-3 space-y-4 rounded-lg">
+                    <div class="glass w-full max-w-md h-30 gap-3 p-3 mt-3 space-y-4 rounded-lg">
                         <div class="rounded-lg space-x-2">
                             <input type="date"
                                    id="date-of-birth"
                                    name="date-of-birth"
-                                   class="h-10 w-full rounded-md border bg-background text-sm
-                                           text-white
-                                           focus:outline-none focus:ring-2 focus:ring-ring
-                                           focus:ring-offset-2"/>
+                                   class="h-10 w-full rounded-md text-sm border-none
+                                           text-white focus:outline-none focus:ring-2 focus:ring-slate-300"/>
                         </div>
 
                         <div class="flex justify-center items-center mt-2 text-xs">
                             <div class="flex items-center space-x-2 w-full">
-                                <div class="dot dot-red"></div>
-                                <p>Weeks you've lived</p>
+                                <div class="dot dot-red">
+                                </div>
+                                <p><span id="passedWeeks"></span> weeks you've lived</p>
                             </div>
                             <div class="flex items-center space-x-2 w-full">
                                 <div class="dot dot-green"></div>
-                                <p>Weeks you've remaining</p>
+                                <p><span id="remainingWeeks"></span> weeks you've remaining</p>
                             </div>
                         </div>
                     </div>
@@ -88,11 +83,11 @@
 </main>
 
 <dialog id="note-dialog">
-    <textarea id="note" class="mt-3 note-textarea" rows="4" cols="50"></textarea>
+    <textarea id="note" class="mt-3 note-textarea" rows="10" cols="50"></textarea>
 
     <div class="flex justify-end items-center gap-3 mt-3">
         <form method="dialog">
-            <button class="btn-glass">Cancel</button>
+            <button class="btn-glass-danger">Cancel</button>
         </form>
         <button id="save-note" class="btn-glass">Save Note</button>
     </div>
