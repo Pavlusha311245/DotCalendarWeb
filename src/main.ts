@@ -1,5 +1,5 @@
 import {addWeeks, addYears} from 'date-fns';
-import {getDateOfBirth, getWeekNote, setDateOfBirth, setWeekNote} from "./utils/storage.ts";
+import {getDateOfBirth, getWeekNote, initStorage, setDateOfBirth, setWeekNote} from "./utils/storage.ts";
 import {calculatePassedAndRemainingWeeks, calculateWeeksInYears, WeeksInfo, YearWeeks} from "./utils/date-calculation.ts";
 import {isOnboardingComplete, startOnboarding} from "./utils/onboarding.ts";
 
@@ -111,6 +111,8 @@ window.onload = function (): void {
     if (!isOnboardingComplete()) {
         startOnboarding();
     }
+
+    initStorage()
 
     dateOfBirthInput.addEventListener('change', handleDobChange);
     dateOfBirthInput.max = new Date().toISOString().split("T")[0];
