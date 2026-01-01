@@ -7,11 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Favicons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest" crossorigin="use-credentials">
-    <link rel="shortcut icon" href="/favicons/favicon.ico">
+    <link rel="shortcut icon" href="/favicon/favicon.ico">
     <meta name="msapplication-TileColor" content="#2d89ef">
     <meta name="msapplication-config" content="/favicons/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
@@ -70,6 +70,8 @@
                                            text-white focus:outline-none focus:ring-2 focus:ring-slate-300">
                         </div>
 
+                        <p is="my-custom-element"></p>
+
                         <div class="flex justify-center items-center mt-2 gap-3 text-xs">
                             <div class="flex items-center space-x-2 w-full">
                                 <div class="dot dot-sm dot-red">
@@ -89,7 +91,10 @@
 </main>
 
 <dialog id="note-dialog">
-    <textarea id="note" class="mt-3 note-textarea" rows="10" cols="50"></textarea>
+    <div class="flex flex-col gap-1">
+        <label for="note" class="text-white text-xl">Write your week-note here...</label>
+        <textarea id="note" class="mt-3 note-textarea" rows="10" cols="50"></textarea>
+    </div>
 
     <div class="flex justify-end items-center gap-3 mt-3">
         <form method="dialog">
