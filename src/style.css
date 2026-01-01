@@ -48,6 +48,10 @@
         @apply bg-white/20 border border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-sm;
     }
 
+    .glass.overlay {
+        @apply bg-black/20 border border-black/30 shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-sm;
+    }
+
     .btn {
         @apply px-2 py-1
         text-gray-50 bg-gray-600
@@ -93,10 +97,10 @@
 
     input[type="date"] {
         @apply bg-gray-600 border-2 border-black p-2 rounded-xl;
-    }
 
-    input[type="date"]:focus {
-        @apply outline-none ring-2 ring-emerald-600;
+        &:focus {
+            @apply outline-none ring-2 ring-emerald-600;
+        }
     }
 
     textarea:focus, input[type="text"]:focus, input[type="password"]:focus {
@@ -107,15 +111,19 @@
         @apply w-full max-w-8 md:max-w-6 lg:max-w-4 h-8 md:h-6 lg:h-4 border-4 md:border-3 border-gray-800 rounded-lg md:rounded-sm;
     }
 
-    .dot-green {
+    .dot.dot-sm {
+        @apply w-full max-w-4 h-4 border-2 rounded-sm;
+    }
+
+    .dot.dot-green {
         @apply bg-emerald-500 hover:bg-emerald-300 hover:cursor-pointer;
     }
 
-    .dot-red {
+    .dot.dot-red {
         @apply bg-rose-700 hover:bg-red-300 hover:cursor-pointer;
     }
 
-    .dot-gray {
+    .dot.dot-gray {
         @apply bg-slate-500 hover:cursor-not-allowed;
     }
 

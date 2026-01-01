@@ -1,6 +1,7 @@
 import {addWeeks, addYears} from 'date-fns';
 import {getDateOfBirth, getWeekNote, setDateOfBirth, setWeekNote} from "./storage.ts";
 import {calculatePassedAndRemainingWeeks, calculateWeeksInYears, WeeksInfo, YearWeeks} from "./date-calculation.ts";
+import {isOnboardingComplete} from "./onboarding.ts";
 
 const dateOfBirthInput: HTMLInputElement = document.getElementById('date-of-birth') as HTMLInputElement;
 
@@ -99,14 +100,26 @@ const handleDobChange = (): void => {
     (document.getElementById('remainingWeeks') as HTMLSpanElement).textContent = `${weeksInfo.remainingWeeks}`;
 };
 
-window.onload = function (): void {
-    dateOfBirthInput.addEventListener('change', handleDobChange);
-    dateOfBirthInput.max = new Date().toISOString().split("T")[0];
+const startOnboarding = (): void => {
+    console.log('Starting onboarding process...');
+}
 
+const generateCurrentYearLink = (): void => {
     const currentYearLink = document.getElementById('current-year') as HTMLLinkElement;
     const currentYear = new Date().getFullYear();
     currentYearLink.href = `#year${currentYear}`;
     currentYearLink.textContent = `${currentYear}`
+}
+
+window.onload = function (): void {
+    if (!isOnboardingComplete()) {
+        startOnboarding();
+    }
+
+    dateOfBirthInput.addEventListener('change', handleDobChange);
+    dateOfBirthInput.max = new Date().toISOString().split("T")[0];
+
+    generateCurrentYearLink();
 
     const storedDateOfBirth: string | null = getDateOfBirth();
     if (storedDateOfBirth) {

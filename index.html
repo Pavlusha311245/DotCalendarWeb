@@ -34,9 +34,12 @@
     <link href="src/style.css" rel="stylesheet">
 </head>
 <body>
-<main>
-    <div id="progress" class="progress"></div>
 
+<!-- Progress Bar -->
+<div id="progress" class="progress"></div>
+
+<!-- Main Content -->
+<main class="relative">
     <section class="min-h-screen main-bg text-gray-200 py-10" id="start">
         <div class="container mx-auto px-5">
             <!--Years of Your Life-->
@@ -56,22 +59,25 @@
                     </div>
 
                     <div class="glass w-full max-w-md h-30 gap-3 p-3 mt-3 space-y-4 rounded-lg">
-                        <div class="rounded-lg space-x-2">
+                        <div class="rounded-lg space-x-2 flex gap-3 items-center">
+                            <label for="date-of-birth" class="w-full max-w-1/4 text-xs md:text-sm">
+                                Date of Birth:
+                            </label>
                             <input type="date"
                                    id="date-of-birth"
                                    name="date-of-birth"
                                    class="h-10 w-full rounded-md text-sm border-none
-                                           text-white focus:outline-none focus:ring-2 focus:ring-slate-300"/>
+                                           text-white focus:outline-none focus:ring-2 focus:ring-slate-300">
                         </div>
 
-                        <div class="flex justify-center items-center mt-2 text-xs">
+                        <div class="flex justify-center items-center mt-2 gap-3 text-xs">
                             <div class="flex items-center space-x-2 w-full">
-                                <div class="dot dot-red">
+                                <div class="dot dot-sm dot-red">
                                 </div>
                                 <p><span id="passedWeeks"></span> weeks you've lived</p>
                             </div>
                             <div class="flex items-center space-x-2 w-full">
-                                <div class="dot dot-green"></div>
+                                <div class="dot dot-sm dot-green"></div>
                                 <p><span id="remainingWeeks"></span> weeks you've remaining</p>
                             </div>
                         </div>
@@ -80,6 +86,55 @@
             </div>
         </div>
     </section>
+
+    <div class="hidden px-10 text-slate-50 fixed w-full h-screen top-0 left-0 text-center flex flex-col justify-center items-center glass overlay">
+        <h2 class="text-2xl font-bold">Your life in weeks</h2>
+
+        <p class="mt-3 max-w-md">
+            You enter your date of birth.<br>
+            DotCalendar shows 100 years of life,<br>
+            divided into weeks.<br>
+            Each dot represents a week.
+        </p>
+
+        <div class="flex gap-3 items-center mt-5 w-full max-w-sm justify-center">
+            <div class="w-full flex gap-1">
+                <div class="dot dot-sm dot-red"></div>
+                <div class="dot dot-sm dot-red"></div>
+                <div class="dot dot-sm dot-red"></div>
+                <div class="dot dot-sm dot-red"></div>
+                <div class="dot dot-sm dot-red"></div>
+            </div>
+            <span>—</span>
+            <p class="w-full">weeks lived</p>
+        </div>
+
+        <div class="flex gap-3 items-center mt-3 w-full max-w-sm justify-center">
+            <div class="w-full flex gap-1">
+                <div class="dot dot-sm dot-green"></div>
+                <div class="dot dot-sm dot-green"></div>
+                <div class="dot dot-sm dot-green"></div>
+                <div class="dot dot-sm dot-green"></div>
+                <div class="dot dot-sm dot-green"></div>
+            </div>
+            <span>—</span>
+            <p class="w-full">weeks remaining</p>
+        </div>
+    </div>
+
+    <div class="px-10 text-slate-50 fixed w-full h-screen top-0 left-0 flex flex-col justify-center items-center glass overlay">
+        <h2 class="text-xl fond-bold text-center">Одна неделя - одна заметка.</h2>
+
+        <p class="mt-5 w-full max-w-md">
+            К каждой неделе можно оставить мысть,<br>
+            событие или решение.
+        </p>
+
+        <p class="mt-3 w-full max-w-md">
+            Со временем это становиться картой твоей жизни,<br>
+            а не просто счётчиком прожитых недель.
+        </p>
+    </div>
 </main>
 
 <dialog id="note-dialog">
