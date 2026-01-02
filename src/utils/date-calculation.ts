@@ -1,4 +1,4 @@
-import {differenceInWeeks, endOfWeek, startOfWeek} from "date-fns";
+import {differenceInWeeks, eachYearOfInterval, getISOWeeksInYear, startOfWeek} from "date-fns";
 
 /**
  * Represents the number of weeks in a specific year.
@@ -41,13 +41,6 @@ export const getRangeOfYears: () => RangeOfYears = (): RangeOfYears => {
     }
 }
 
-const calculateYearWeeks = (year: number): YearWeeks => {
-    const startOfYear: Date = startOfWeek(new Date(year, 0, 1));
-    const endOfYear: Date = endOfWeek(new Date(year, 11, 31));
-    const weeksCount: number = differenceInWeeks(endOfYear, startOfYear);
-    return {year, weeksCount};
-};
-
 /**
  * Calculates the number of weeks in each year within a specified date range.
  *
@@ -55,11 +48,9 @@ const calculateYearWeeks = (year: number): YearWeeks => {
  * @param endDate
  */
 export const calculateWeeksInYears = (startDate: Date, endDate: Date): YearWeeks[] => {
-    const years: number[] = Array.from(
-        {length: endDate.getFullYear() - startDate.getFullYear() + 1},
-        (_, idx) => idx + startDate.getFullYear()
-    );
-    return years.map(calculateYearWeeks);
+    const years = eachYearOfInterval({start: startDate, end: endDate});
+
+    return years.map(yearDate => ({year: yearDate.getFullYear(), weeksCount: getISOWeeksInYear(yearDate)}));
 };
 
 /**

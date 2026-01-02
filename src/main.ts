@@ -16,13 +16,15 @@ const handleDobChange = (): void => {
         dateOfBirthInput.value = maxDate
     }
 
-    const startDate: Date = new Date(dateOfBirthInput.value);
-    setDateOfBirth(dateOfBirthInput.value)
-    const endDate: Date = addYears(startDate, 100);
-    const nowDate: Date = new Date();
-    const yearsAndWeeks: YearWeeks[] = calculateWeeksInYears(startDate, endDate);
+    const years = getRangeOfYears();
 
-    renderYearsList(yearsAndWeeks, nowDate, startDate);
+    const dateOfBirth: Date = new Date(dateOfBirthInput.value);
+    setDateOfBirth(dateOfBirthInput.value)
+    const endDate: Date = addYears(dateOfBirth, 100);
+    const nowDate: Date = new Date();
+    const yearsAndWeeks: YearWeeks[] = calculateWeeksInYears(years.startYear, endDate);
+
+    renderYearsList(yearsAndWeeks, nowDate, dateOfBirth);
 
     const weeksInfo: WeeksInfo = calculatePassedAndRemainingWeeks(yearsAndWeeks, nowDate);
     (document.getElementById('passedWeeks') as HTMLSpanElement).textContent = `${weeksInfo.passedWeeks}`;
@@ -33,6 +35,15 @@ const dateOfBirthInput: HTMLInputElement = document.getElementById('date-of-birt
 dateOfBirthInput.addEventListener('change', handleDobChange);
 dateOfBirthInput.max = new Date().toISOString().split("T")[0];
 
+const deleteDateOfBirthButton: HTMLButtonElement = document.getElementById('delete-dob') as HTMLButtonElement;
+deleteDateOfBirthButton.addEventListener('click', (): void => {
+    dateOfBirthInput.value = '';
+    setDateOfBirth('');
+
+    const years = getRangeOfYears();
+    renderYearsList(calculateWeeksInYears(years.startYear, years.endYear), new Date(years.currentYear), null);
+});
+
 window.onload = function (): void {
     if (!isOnboardingComplete()) {
         startOnboarding();
@@ -42,9 +53,7 @@ window.onload = function (): void {
     renderCurrentYearLink();
 
     const years = getRangeOfYears();
-    const yearsAndWeeks: YearWeeks[] = calculateWeeksInYears(years.startYear, years.endYear);
-
-    renderYearsList(yearsAndWeeks, new Date(years.currentYear), null);
+    renderYearsList(calculateWeeksInYears(years.startYear, years.endYear), new Date(years.currentYear), null);
 
     const storedDateOfBirth: string | null = getDateOfBirth();
     if (storedDateOfBirth) {

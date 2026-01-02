@@ -30,13 +30,13 @@ export const renderYearsList = (yearsAndWeeks: YearWeeks[], startDate: Date, dob
 
     yearsAndWeeks.forEach(({year, weeksCount}: YearWeeks) => {
         const yearElement: HTMLElement = createElementWithClass('h2', 'text-stale-50 text-xl font-bold text-center w-12', year.toString());
-        yearElement.id = `year${year}`;
         if (year === startDate.getFullYear()) {
             yearElement.classList.add('text-emerald-400');
         }
         const flexDivElement: HTMLElement = renderDotsWeek({year, weeksCount}, dob, startDate);
         const outerDivElement: HTMLElement = createElementWithClass('div', 'flex gap-5 items-center', '');
         outerDivElement.append(yearElement, flexDivElement);
+        outerDivElement.id = `year${year}`;
 
         fragment.appendChild(outerDivElement)
     });

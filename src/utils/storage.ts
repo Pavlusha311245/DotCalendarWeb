@@ -45,3 +45,11 @@ export const getWeekNote: (weekId: string) => string = (weekId: string): string 
 export const setWeekNote: (weekId: string, note: string) => void = (weekId: string, note: string): void => {
     localStorage.setItem(weekId, note);
 }
+
+export const getOnboardingStatus: () => boolean = (): boolean => {
+    return localStorage.getItem('onboardingComplete') === 'true';
+}
+
+export const setOnboardingStatus: (status: boolean) => void = (status: boolean): void => {
+    localStorage.setItem('onboardingComplete', status.toString());
+}

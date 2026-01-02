@@ -1,6 +1,6 @@
 # DotCalendar
 
-<img src="./public/logo.webp" width="80" alt="DotCalendar Logo">
+<img src="./public/logo.webp" width="1024" alt="DotCalendar Logo" style="width: 80px">
 
 ----
 
@@ -11,7 +11,7 @@ transience of life, which allows you to make more global plans, because 1 point 
 
 ## Requirements
 
-- Bun v1.0.0 or higher
+- Bun v1.3.0 or higher
 
 ### Installation
 

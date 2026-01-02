@@ -18,7 +18,7 @@
     }
 
     .main-bg {
-        @apply bg-linear-to-r from-slate-600 to-slate-500
+        @apply bg-linear-to-r from-sky-900 to-cyan-800
     }
 
     dialog::backdrop {
@@ -72,6 +72,7 @@
         rounded-lg
         shadow-[0_4px_30px_rgba(0,0,0,0.1)]
         backdrop-blur-sm
+        cursor-pointer
         transition-all duration-200 ease-in-out;
     }
 

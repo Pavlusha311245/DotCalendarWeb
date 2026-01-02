@@ -1,10 +1,9 @@
-import {getDateOfBirth} from "./storage.ts";
+import {getOnboardingStatus, setOnboardingStatus} from "./storage.ts";
 import {onboardingScreen1} from "../components/onboarding/screen1.ts";
 import {onboardingScreen2} from "../components/onboarding/screen2.ts";
 
 export const isOnboardingComplete: () => boolean = (): boolean => {
-    const dob: string | null = getDateOfBirth();
-    return dob !== null && dob !== '';
+    return getOnboardingStatus();
 };
 
 export const startOnboarding = (): void => {
@@ -19,6 +18,7 @@ export const startOnboarding = (): void => {
         const goItButton: HTMLButtonElement = document.getElementById('onboarding-screen-2-got-it') as HTMLButtonElement;
         goItButton.addEventListener('click', () => {
             onboardingScreen2.remove()
+            setOnboardingStatus(true)
         });
     });
 }
