@@ -70,10 +70,9 @@ const renderDotsWeek = (
             calendarDotElement.setAttribute('color', 'gray');
         } else if (weekDate <= currentDate) {
             calendarDotElement.setAttribute('color', 'red');
-            calendarDotElement.addEventListener('click', () => showWeekInfo(calendarDotElement.id));
         } else {
             calendarDotElement.setAttribute('color', 'green');
-            calendarDotElement.addEventListener('click', () => showWeekInfo(calendarDotElement.id));
+            calendarDotElement.addEventListener('click', () => showWeekInfo(calendarDotElement.getAttribute('week') as string));
         }
 
         divElement.appendChild(calendarDotElement);
@@ -95,9 +94,11 @@ const showWeekInfo = (id: string) => {
     textarea!.value = localStorageData;
 
     dialog.querySelector('#save-note')?.addEventListener('click', () => {
+        console.log('Saving note for', id, 'with content:', textarea.value);
+
         setWeekNote(id, textarea.value);
         dialog.close();
-    })
+    }, {once: true});
     dialog.showModal();
 }
 

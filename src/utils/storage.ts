@@ -46,10 +46,18 @@ export const setWeekNote: (weekId: string, note: string) => void = (weekId: stri
     localStorage.setItem(weekId, note);
 }
 
+/**
+ * Gets the onboarding completion status.
+ */
 export const getOnboardingStatus: () => boolean = (): boolean => {
     return localStorage.getItem('onboardingComplete') === 'true';
 }
 
+/**
+ * Sets the onboarding completion status.
+ *
+ * @param status
+ */
 export const setOnboardingStatus: (status: boolean) => void = (status: boolean): void => {
     localStorage.setItem('onboardingComplete', status.toString());
 }
