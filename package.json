@@ -1,7 +1,12 @@
 {
   "name": "dot-calendar",
   "license": "MIT",
-  "version": "0.2.0",
+  "version": "0.6.0",
+  "author": {
+    "email": "pavel.zavadski@pavlusha.me",
+    "name": "Pavel Zavadski",
+    "url": "https://pavlusha.me"
+  },
   "scripts": {
     "dev": "bunx --bun vite",
     "build": "bunx --bun vite build",

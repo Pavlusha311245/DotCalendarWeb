@@ -1,7 +1,13 @@
 import {addWeeks, addYears} from 'date-fns';
 import {getDateOfBirth, getWeekNote, initStorage, setDateOfBirth, setWeekNote} from "./utils/storage.ts";
-import {calculatePassedAndRemainingWeeks, calculateWeeksInYears, WeeksInfo, YearWeeks} from "./utils/date-calculation.ts";
+import {
+    calculatePassedAndRemainingWeeks,
+    calculateWeeksInYears,
+    WeeksInfo,
+    YearWeeks
+} from "./utils/date-calculation.ts";
 import {isOnboardingComplete, startOnboarding} from "./utils/onboarding.ts";
+import './components/calendar-dot.ts'
 
 const dateOfBirthInput: HTMLInputElement = document.getElementById('date-of-birth') as HTMLInputElement;
 
@@ -22,24 +28,25 @@ const generateDotElement = (
     dob: Date,
     currentDate: Date
 ): HTMLElement => {
-    const divElement: HTMLElement = createElementWithClass('div', 'mt-2 flex flex-wrap gap-1', '');
+    const divElement: HTMLElement = createElementWithClass('div', 'mt-2 flex w-full flex-wrap gap-1', '');
 
     for (let i: number = 0; i < weeksCount; i++) {
-        const weekDiv: HTMLElement = createElementWithClass('div', 'dot', '');
+        const calendarDotElement = document.createElement('calendar-dot');
+        calendarDotElement.setAttribute('week', `week-${year}-${i + 1}`);
+
         const weekDate: Date = addWeeks(new Date(year, 0, 1), i);
-        weekDiv.id = `week-${year}-${i + 1}`;
 
         if (weekDate < dob) {
-            weekDiv.classList.add('dot-gray');
+            continue
         } else if (weekDate <= currentDate) {
-            weekDiv.classList.add('dot-red');
-            weekDiv.addEventListener('click', () => showWeekInfo(weekDiv.id));
+            calendarDotElement.setAttribute('color', 'red');
+            calendarDotElement.addEventListener('click', () => showWeekInfo(calendarDotElement.id));
         } else {
-            weekDiv.classList.add('dot-green');
-            weekDiv.addEventListener('click', () => showWeekInfo(weekDiv.id));
+            calendarDotElement.setAttribute('color', 'green');
+            calendarDotElement.addEventListener('click', () => showWeekInfo(calendarDotElement.id));
         }
 
-        divElement.appendChild(weekDiv);
+        divElement.appendChild(calendarDotElement);
     }
     return divElement;
 };
@@ -101,8 +108,9 @@ const handleDobChange = (): void => {
 };
 
 const generateCurrentYearLink = (): void => {
-    const currentYearLink = document.getElementById('current-year') as HTMLLinkElement;
     const currentYear = new Date().getFullYear();
+
+    const currentYearLink = document.getElementById('current-year') as HTMLLinkElement;
     currentYearLink.href = `#year${currentYear}`;
     currentYearLink.textContent = `${currentYear}`
 }
