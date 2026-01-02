@@ -1,5 +1,12 @@
 # CHANGELOG
 
+# 0.6.0 - [2026/01/xx]
+
+- Update dependencies to latest versions
+- Move from vite to bun build system
+- Update UI/UX design
+- Improve Note feature
+
 # v0.5.0 - [2025/12/21]
 
 - Update ui/ux design

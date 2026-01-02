@@ -1,6 +1,6 @@
 # DotCalendar
 
-<img src="./public/logo.webp" width="1024" alt="DotCalendar Logo" style="width: 80px">
+<img src="public/logo.webp" width="1024" alt="DotCalendar Logo" style="width: 80px">
 
 ----
 
