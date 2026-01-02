@@ -8,6 +8,7 @@ import {
 } from "./utils/date-calculation.ts";
 import {isOnboardingComplete, startOnboarding} from "./utils/onboarding.ts";
 import './components/calendar-dot.ts'
+import './components/note-dialog.ts'
 import {renderCurrentYearLink, renderYearsList} from "./utils/render.ts";
 
 const handleDobChange = (): void => {

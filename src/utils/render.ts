@@ -1,6 +1,6 @@
-import {YearWeeks} from "./date-calculation.ts";
 import {addWeeks} from "date-fns";
-import {getWeekNote, setWeekNote} from "./storage.ts";
+import {YearWeeks} from "./date-calculation.ts";
+import {NoteDialog} from "../components/note-dialog.ts";
 
 /**
  * Generates a link element that points to the current year section of the page.
@@ -72,7 +72,10 @@ const renderDotsWeek = (
             calendarDotElement.setAttribute('color', 'red');
         } else {
             calendarDotElement.setAttribute('color', 'green');
-            calendarDotElement.addEventListener('click', () => showWeekInfo(calendarDotElement.getAttribute('week') as string));
+            calendarDotElement.addEventListener('click', () =>
+                (document.getElementById('note-dialog') as NoteDialog)
+                    .openNote(calendarDotElement.getAttribute('week') as string)
+            );
         }
 
         divElement.appendChild(calendarDotElement);
@@ -80,27 +83,6 @@ const renderDotsWeek = (
     return divElement;
 };
 
-/**
- * Displays a dialog with information about a specific week.
- * The dialog contains a textarea for editing notes related to the week.
- *
- * @param id
- */
-const showWeekInfo = (id: string) => {
-    const dialog = document.getElementById("note-dialog") as HTMLDialogElement;
-    const localStorageData: string = getWeekNote(id);
-
-    const textarea = dialog.querySelector("textarea") as HTMLTextAreaElement;
-    textarea!.value = localStorageData;
-
-    dialog.querySelector('#save-note')?.addEventListener('click', () => {
-        console.log('Saving note for', id, 'with content:', textarea.value);
-
-        setWeekNote(id, textarea.value);
-        dialog.close();
-    }, {once: true});
-    dialog.showModal();
-}
 
 /**
  * Creates an HTML element with the specified tag name, class name, and text content.

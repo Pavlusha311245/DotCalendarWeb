@@ -102,19 +102,7 @@
     </section>
 </main>
 
-<dialog id="note-dialog">
-    <div class="flex flex-col gap-1">
-        <label for="note" class="text-white text-xl">Write your week-note here...</label>
-        <textarea id="note" class="mt-3 note-textarea" rows="10" cols="50"></textarea>
-    </div>
-
-    <div class="flex justify-end items-center gap-3 mt-3">
-        <form method="dialog">
-            <button class="btn-glass btn-danger">Cancel</button>
-        </form>
-        <button id="save-note" class="btn-glass">Save Note</button>
-    </div>
-</dialog>
+<dialog is="note-dialog" id="note-dialog"></dialog>
 
 <script type="module" src="src/main.ts"></script>
 
