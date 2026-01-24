@@ -8,10 +8,5 @@ await Bun.build({
     target: "browser",
     sourcemap: "linked",
     minify: true,
-    naming: {
-        entry: "[name].[ext]",
-        chunk: "assets/[name].[hash]",
-        asset: "assets/[name].[hash].[ext]"
-    }
 })
 await Bun.$`cp -r public/* dist/`
