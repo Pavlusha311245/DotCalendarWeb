@@ -10,3 +10,5 @@ await Bun.build({
     minify: true,
 })
 await Bun.$`cp -r public/* dist/`
+
+console.log(`✓ Build complete`)

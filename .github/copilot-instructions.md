@@ -11,7 +11,8 @@
 - **Build System**: Bun v1.3.6+ (replaces Vite as of v0.6.0)
 - **Runtime**: Modern browsers (ESNext target)
 - **Deployment**: Static site hosting or Cloudflare Workers (wrangler)
-- **License**: MIT
+- **License**: MIT (Open Source)
+- **Status**: Open Source Project - Community contributions welcome
 - **Repository Size**: Small (~25MB with node_modules)
 
 ### Current Version
