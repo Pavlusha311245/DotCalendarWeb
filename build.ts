@@ -1,6 +1,11 @@
 import tailwind from "bun-plugin-tailwind"
 
-await Bun.$`rm -r dist`
+// Remove dist folder if it exists
+const distPath = new URL("dist", import.meta.url)
+if (await Bun.file(distPath).exists()) {
+    await Bun.$`rm -r dist`
+}
+
 await Bun.build({
     plugins: [tailwind],
     outdir: "dist",
