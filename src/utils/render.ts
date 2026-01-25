@@ -29,9 +29,11 @@ export const renderYearsList = (yearsAndWeeks: YearWeeks[], startDate: Date, dob
     const fragment: DocumentFragment = document.createDocumentFragment();
 
     yearsAndWeeks.forEach(({year, weeksCount}: YearWeeks) => {
-        const yearElement: HTMLElement = createElementWithClass('h2', 'text-stale-50 text-xl font-bold text-center w-12', year.toString());
+        const yearElement: HTMLElement = createElementWithClass('h2', 'text-slate-50 text-xl font-bold text-center w-12', year.toString());
         if (year === startDate.getFullYear()) {
-            yearElement.classList.add('text-emerald-400');
+            yearElement.style.color = 'var(--color-bright-blue)';
+        } else {
+            yearElement.style.color = 'var(--color-text-light)';
         }
         const flexDivElement: HTMLElement = renderDotsWeek({year, weeksCount}, dob, startDate);
         const outerDivElement: HTMLElement = createElementWithClass('div', 'flex gap-5 items-center', '');

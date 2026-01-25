@@ -16,6 +16,12 @@
 
 ### Current Version
 - **v0.6.0** (in development, updated from Vite to Bun)
+- **Latest Updates** (January 25, 2026):
+  - Cool Navy Blue color palette implementation (v1.0)
+  - Glass morphism input field for date of birth
+  - Full-width button styling for top navigation
+  - UI layout improvements for better mobile responsiveness
+  - Comprehensive design system documentation
 
 ---
 
@@ -58,6 +64,16 @@ favicon/                        # Favicon files (various sizes)
 - **build.ts**: Bun build script that bundles, minifies, and copies static files
 - **site.webmanifest**: PWA manifest
 - **.gitignore**: Ignores dist/, node_modules/, .wrangler/
+
+### Documentation Files
+- **.github/copilot-instructions.md**: This file - AI agent instructions
+- **src/DESIGN_SYSTEM.md**: Design system documentation with color palette, component styles, accessibility notes
+- **COLOR_PALETTE_REFERENCE.md**: Quick visual color reference guide
+- **COLOR_PALETTE_IMPLEMENTATION.md**: Detailed color palette implementation report
+- **COLOR_PALETTE_UPDATE_REPORT.md**: Complete update summary with diff details
+- **COLOR_PALETTE_SUMMARY.md**: Overview of palette replacement
+- **COLOR_PALETTE_CHECKLIST.md**: Implementation checklist
+- **UI_LAYOUT_UPDATE.md**: Changes to UI layout (full-width buttons, glass input)
 
 ---
 
@@ -161,10 +177,88 @@ bun run lint:fix
 - Custom fonts: Inter (5 weights: Thin, Regular, Medium, SemiBold, Bold)
 - Glass effect classes use backdrop-blur and rgba colors
 - Dialog styling uses CSS custom properties and Tailwind
+- **Color Palette** (v1.0 - Cool Navy Blue):
+  - Primary: #052659 (Deep Navy)
+  - Secondary: #021024 (Almost Black Navy)
+  - Accent Blue: #5483B3 (Muted Blue-Gray)
+  - Light Blue: #7DA0CA (Soft Light Blue)
+  - Bright Blue: #C1E8FF (Very Light Cyan)
+  - Text Light: #F5F5F5
+- CSS Variables defined in `:root` for easy theme customization
+- Custom CSS classes: `.glass`, `.glass.overlay`, `.btn`, `.btn-glass`, `.btn-glass.btn-success`, `.btn-glass.btn-danger`, `.input-glass`
+- Input glass effect: Semi-transparent background with 8px backdrop blur
 
 ---
 
-## Testing and Validation
+## Design System & Color Palette
+
+### Color Variables (CSS Custom Properties)
+All colors are defined in `src/style.css` `:root` scope:
+
+```css
+--color-primary: #052659;          /* Deep Navy - buttons, primary actions */
+--color-secondary: #021024;        /* Almost Black Navy - backgrounds, borders */
+--color-accent-blue: #5483B3;      /* Muted Blue-Gray - completed weeks, accents */
+--color-light-blue: #7DA0CA;       /* Soft Light Blue - inputs, hover states */
+--color-bright-blue: #C1E8FF;      /* Very Light Cyan - focus states, bright accents */
+--color-text-light: #F5F5F5;       /* Light Text - primary text on dark backgrounds */
+--color-text-dark: #1A1A1A;        /* Dark Text - reserved for light backgrounds */
+--transition-duration: 0.3s;       /* Animation timing */
+--transition-ease: ease;           /* Animation easing */
+```
+
+### Glass Morphism Classes
+- **.glass**: Semi-transparent background with 8px blur, used for containers
+- **.glass.overlay**: Alternative glass style for overlays
+- **.input-glass**: Glass effect for input fields (date of birth)
+  - Semi-transparent navy background (5% opacity)
+  - Light blue border with reduced opacity
+  - Full backdrop blur effect
+  - Focus state: increased opacity, bright blue border
+
+### Button Variants
+- **.btn**: Primary button with navy background, light blue hover state
+- **.btn-glass**: Glass button with semi-transparent navy
+- **.btn-glass.btn-success**: Purple/accent blue variant
+- **.btn-glass.btn-danger**: Bright cyan variant
+
+### Calendar Dot Styles
+- **.dot.dot-red**: Completed weeks - bright blue background (#C1E8FF)
+- **.dot.dot-green**: Remaining weeks - accent blue background (#5483B3)
+- **.dot.dot-gray**: Inactive weeks - light blue with 50% opacity
+- Hover effects: scale 1.2x, color shift, subtle shadow
+
+### Design Principles
+- **Monochromatic + Complementary**: Cool navy blues with light cyan accents
+- **Professional Aesthetic**: Trustworthy, modern, calm
+- **Accessibility**: WCAG AA+ contrast ratios, clear focus states
+- **Responsive**: Mobile-first design with 768px breakpoint
+
+---
+
+## Recent UI Updates (January 25, 2026)
+
+### Top Navigation Buttons
+- Both buttons now full-width (`w-full` class)
+- Current year button: text centered
+- To top button: icon with label, centered flex layout
+- Vertical stacking with 3px gap
+
+### Input Glass Effect
+- Date of birth input now uses `.input-glass` class
+- Styled as glass container matching other glass elements
+- Focus state: increased opacity, bright blue border
+- Smooth 0.3s transitions on all properties
+
+### Layout Improvements
+- Input label separated from input field (vertical stack)
+- Delete button positioned beside input (flex layout)
+- Info cards displayed vertically for better mobile readability
+- Better visual hierarchy and touch targets
+
+---
+
+
 
 ### Pre-commit Checks
 No automated CI/CD workflows currently configured. Before committing:
@@ -240,11 +334,15 @@ No automated CI/CD workflows currently configured. Before committing:
 5. Run `bun run lint:fix` before committing
 
 ### When Changing Styles
-1. Use Tailwind utilities first (@apply in CSS)
-2. Create custom classes in .glass, .btn style sections
-3. Ensure dark mode compatibility (classes use gray-200 for text, dark backgrounds)
-4. Test glass effects with backdrop-blur in dev server
-5. Verify Inter font loads correctly
+1. **Always use CSS variables** for colors - never hardcode hex values
+2. Use glass morphism (`background: rgba(...), backdrop-filter: blur(8px)`) for overlay elements
+3. Ensure consistent animation timing (0.3s ease for all transitions)
+4. Create custom classes in designated sections (.glass, .btn, .input-glass, etc.)
+5. Test glass effects and backdrop blur in dev server
+6. Verify Inter font loads correctly
+7. Test on both mobile (< 768px) and desktop (768px+) viewports
+8. Check accessibility with WCAG contrast checkers
+9. Document color usage in src/DESIGN_SYSTEM.md if adding new variants
 
 ### When Adding Dependencies
 1. Use `bun add` or modify package.json and run `bun install`
@@ -281,6 +379,29 @@ No automated CI/CD workflows currently configured. Before committing:
 
 ---
 
+## ⚠️ DO NOT CREATE NEW INSTRUCTION/DOCUMENTATION FILES
+
+**STRICT RULE**: Do NOT create new markdown files with instructions, guidelines, reports, or documentation unless explicitly requested by the user.
+
+### What NOT to do:
+- ❌ Do NOT create `*_REPORT.md` files
+- ❌ Do NOT create `*_CHECKLIST.md` files
+- ❌ Do NOT create `*_SUMMARY.md` files
+- ❌ Do NOT create `*_UPDATE.md` files
+- ❌ Do NOT create any new `.md` documentation files
+- ❌ Do NOT create files in `.github/` directory without explicit request
+
+### What TO do:
+- ✅ Modify existing files (src/style.css, index.html, src/main.ts, etc.)
+- ✅ Update existing documentation if needed (src/DESIGN_SYSTEM.md only)
+- ✅ Only create new files if they are application code (not documentation)
+- ✅ Ask user before creating any new files
+
+### Exception:
+Only create new files if the user specifically says "create a file called X" or similar explicit request.
+
+---
+
 ## Trust the Instructions
 
 When working on this repository:
@@ -309,5 +430,5 @@ This guide covers 95% of common tasks. Follow it to work efficiently without unn
 
 ---
 
-**Last Updated**: January 24, 2026
+**Last Updated**: January 25, 2026
 **Maintained by**: Pavel Zavadski (pavel.zavadski@pavlusha.me)

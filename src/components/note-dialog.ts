@@ -13,7 +13,7 @@ export class NoteDialog extends HTMLDialogElement {
 
         this.innerHTML = `
             <div class="flex flex-col gap-1">
-                <label class="text-white text-xl">
+                <label class="text-xl" style="color: var(--color-text-light);">
                     Write your week-note here...
                 </label>
                 <textarea
@@ -26,7 +26,7 @@ export class NoteDialog extends HTMLDialogElement {
                 <form method="dialog">
                     <button class="btn-glass btn-danger">Cancel</button>
                 </form>
-                <button id="save-note" class="btn-glass">Save Note</button>
+                <button id="save-note" class="btn-glass btn-success">Save Note</button>
             </div>
         `;
 
