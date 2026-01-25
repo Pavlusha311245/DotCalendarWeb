@@ -45,7 +45,46 @@ deleteDateOfBirthButton.addEventListener('click', (): void => {
     renderYearsList(calculateWeeksInYears(years.startYear, years.endYear), new Date(years.currentYear), null);
 });
 
+// Theme toggle
+const initTheme = (): void => {
+    const html = document.documentElement;
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+};
+
+const updateThemeIcon = (theme: string): void => {
+    const sunCircle = document.getElementById('sun-circle') as HTMLElement | null;
+    const sunRays = document.getElementById('sun-rays') as HTMLElement | null;
+    const moon = document.getElementById('moon') as HTMLElement | null;
+
+    if (!sunCircle || !sunRays || !moon) return;
+
+    if (theme === 'light') {
+        sunCircle.style.display = 'none';
+        sunRays.style.display = 'none';
+        moon.style.display = 'block';
+    } else {
+        sunCircle.style.display = 'block';
+        sunRays.style.display = 'block';
+        moon.style.display = 'none';
+    }
+};
+
+const themeToggleButton: HTMLButtonElement = document.getElementById('theme-toggle') as HTMLButtonElement;
+themeToggleButton.addEventListener('click', (): void => {
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-theme') || 'dark';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
+});
+
 window.onload = function (): void {
+    initTheme();
+
     if (!isOnboardingComplete()) {
         startOnboarding();
     }

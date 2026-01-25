@@ -23,6 +23,9 @@
   - Full-width button styling for top navigation
   - UI layout improvements for better mobile responsiveness
   - Comprehensive design system documentation
+  - Dark/Light theme toggle (dual theme support)
+  - Mobile optimization with safe-area-inset support for notch/Dynamic Island
+  - Reduced padding for thin, compact blocks
 
 ---
 
@@ -109,12 +112,15 @@ bun run build
 ```
 - Command: `bun ./build.ts`
 - Steps:
-  1. Removes existing dist/ directory
-  2. Bundles entry point (index.html) with Tailwind CSS plugin
-  3. Sets target to "browser", minifies, includes source maps
-  4. Copies all files from public/ to dist/
+  1. Checks if dist/ directory exists before removing
+  2. Removes dist/ directory if it exists (using Bun.file API)
+  3. Bundles entry point (index.html) with Tailwind CSS plugin
+  4. Sets target to "browser", minifies, includes source maps
+  5. Copies all files from public/ to dist/
 - Output: Optimized, minified JavaScript and CSS in dist/
 - Build time: ~1-2 seconds
+- Creates source maps for debugging (sourcemap: "linked")
+- Safe handling: doesn't fail if dist folder doesn't exist on first build
 - Creates source maps for debugging (sourcemap: "linked")
 
 ### Preview Production Build
@@ -178,13 +184,27 @@ bun run lint:fix
 - Custom fonts: Inter (5 weights: Thin, Regular, Medium, SemiBold, Bold)
 - Glass effect classes use backdrop-blur and rgba colors
 - Dialog styling uses CSS custom properties and Tailwind
-- **Color Palette** (v1.0 - Cool Navy Blue):
+- **Dual Theme Support** (Dark/Light):
+  - Switch controlled by `data-theme="dark"` or `data-theme="light"` on `<html>`
+  - User preference saved to localStorage as `theme`
+  - Theme toggle button in navigation bar (sun/moon icon)
+  - Smooth 0.3s transitions between themes
+
+- **Color Palette - Dark Theme** (default):
   - Primary: #052659 (Deep Navy)
   - Secondary: #021024 (Almost Black Navy)
   - Accent Blue: #5483B3 (Muted Blue-Gray)
   - Light Blue: #7DA0CA (Soft Light Blue)
   - Bright Blue: #C1E8FF (Very Light Cyan)
   - Text Light: #F5F5F5
+
+- **Color Palette - Light Theme**:
+  - Primary: #D4E4F0 (Soft Blue-Gray)
+  - Secondary: #E8F0F5 (Very Light Blue)
+  - Accent Blue: #5483B3 (Muted Blue-Gray) - shared
+  - Light Blue: #7DA0CA (Soft Light Blue) - shared
+  - Bright Blue: #052659 (Deep Navy)
+  - Text Light: #1A1A1A (Dark)
 - CSS Variables defined in `:root` for easy theme customization
 - Custom CSS classes: `.glass`, `.glass.overlay`, `.btn`, `.btn-glass`, `.btn-glass.btn-success`, `.btn-glass.btn-danger`, `.input-glass`
 - Input glass effect: Semi-transparent background with 8px backdrop blur
@@ -193,9 +213,18 @@ bun run lint:fix
 
 ## Design System & Color Palette
 
-### Color Variables (CSS Custom Properties)
-All colors are defined in `src/style.css` `:root` scope:
+### Theme System
+- **Dual Theme Support**: Dark (default) and Light themes
+- Theme controlled via `html[data-theme="dark"]` or `html[data-theme="light"]`
+- User preference persisted in localStorage as `theme` key
+- Theme toggle button located in navigation (sun/moon icon)
+- Smooth 0.3s color transitions between themes using CSS variables
+- **Init function**: `initTheme()` called on page load to restore user's preference
 
+### Color Variables (CSS Custom Properties)
+All colors are defined in `src/style.css` `:root` scope and overridden for light theme:
+
+**Dark Theme** (`:root`):
 ```css
 --color-primary: #052659;          /* Deep Navy - buttons, primary actions */
 --color-secondary: #021024;        /* Almost Black Navy - backgrounds, borders */
@@ -204,6 +233,21 @@ All colors are defined in `src/style.css` `:root` scope:
 --color-bright-blue: #C1E8FF;      /* Very Light Cyan - focus states, bright accents */
 --color-text-light: #F5F5F5;       /* Light Text - primary text on dark backgrounds */
 --color-text-dark: #1A1A1A;        /* Dark Text - reserved for light backgrounds */
+```
+
+**Light Theme** (`html[data-theme="light"]`):
+```css
+--color-primary: #D4E4F0;          /* Soft Blue-Gray - buttons, primary actions */
+--color-secondary: #E8F0F5;        /* Very Light Blue - backgrounds, borders */
+--color-accent-blue: #5483B3;      /* Muted Blue-Gray - completed weeks (shared) */
+--color-light-blue: #7DA0CA;       /* Soft Light Blue - inputs (shared) */
+--color-bright-blue: #052659;      /* Deep Navy - focus states, bright accents */
+--color-text-light: #1A1A1A;       /* Dark Text - primary text on light backgrounds */
+--color-text-dark: #F5F5F5;        /* Light Text - reserved for dark backgrounds */
+```
+
+**Shared Properties**:
+```css
 --transition-duration: 0.3s;       /* Animation timing */
 --transition-ease: ease;           /* Animation easing */
 ```
@@ -239,23 +283,38 @@ All colors are defined in `src/style.css` `:root` scope:
 
 ## Recent UI Updates (January 25, 2026)
 
-### Top Navigation Buttons
-- Both buttons now full-width (`w-full` class)
-- Current year button: text centered
-- To top button: icon with label, centered flex layout
-- Vertical stacking with 3px gap
+### Top Navigation Bar
+- Three buttons in horizontal layout:
+  1. **Current year** - navigates to current year section
+  2. **Theme toggle** (middle) - sun/moon icon, switches between dark/light themes
+  3. **To top** - icon with label, scrolls to top
+- Buttons have small gap (gap-2) for compact appearance
+- All buttons use `.btn-glass` styling with consistent padding
+
+### Footer Panels
+- Uniform vertical spacing (gap-2 between panels)
+- Consistent border-radius (0.5rem) across all elements
+- Thin padding for compact, modern appearance:
+  - Buttons: 0.5rem vertical padding
+  - Input field: 0.5rem padding
+  - Article cards: 0.2rem padding
+- Safe area support for notch/Dynamic Island on mobile:
+  - Uses `env(safe-area-inset-*)` for proper spacing
+  - Viewport-fit=cover meta tag for full-screen experience
 
 ### Input Glass Effect
-- Date of birth input now uses `.input-glass` class
+- Date of birth input uses `.input-glass` class
 - Styled as glass container matching other glass elements
 - Focus state: increased opacity, bright blue border
 - Smooth 0.3s transitions on all properties
+- Delete button positioned inside input field (absolute positioning)
 
-### Layout Improvements
-- Input label separated from input field (vertical stack)
-- Delete button positioned beside input (flex layout)
-- Info cards displayed vertically for better mobile readability
-- Better visual hierarchy and touch targets
+### Mobile Optimization
+- Responsive text sizes (text-sm, text-xs)
+- Reduced icon sizes (w-3 h-3, w-4 h-4)
+- Safe area insets for devices with notches
+- `max-w-sm` containers (384px) for optimal mobile width
+- Touch-friendly padding and spacing
 
 ---
 
