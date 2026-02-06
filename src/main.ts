@@ -12,6 +12,12 @@ import './components/dob-input.ts'
 import './components/note-dialog.ts'
 import {renderCurrentYearLink, renderYearsList} from "./utils/render.ts";
 
+// State to track whether past years are shown
+let showPastYears: boolean = false;
+let currentYearsAndWeeks: YearWeeks[] = [];
+let currentNowDate: Date = new Date();
+let currentDateOfBirth: Date | null = null;
+
 const getDobInputComponent = (): HTMLElement | null => {
     return document.querySelector('dob-input');
 };
@@ -35,11 +41,33 @@ const handleDobChange = (): void => {
     const nowDate: Date = new Date();
     const yearsAndWeeks: YearWeeks[] = calculateWeeksInYears(years.startYear, endDate);
 
-    renderYearsList(yearsAndWeeks, nowDate, dateOfBirth);
+    // Store current state for button click handler
+    currentYearsAndWeeks = yearsAndWeeks;
+    currentNowDate = nowDate;
+    currentDateOfBirth = dateOfBirth;
+    showPastYears = false; // Reset to false when DOB changes
+
+    renderYearsList(yearsAndWeeks, nowDate, dateOfBirth, showPastYears);
+    setupShowPastYearsButton();
 
     const weeksInfo: WeeksInfo = calculatePassedAndRemainingWeeks(yearsAndWeeks, nowDate);
     (document.getElementById('passedWeeks') as HTMLSpanElement).textContent = `${weeksInfo.passedWeeks}`;
     (document.getElementById('remainingWeeks') as HTMLSpanElement).textContent = `${weeksInfo.remainingWeeks}`;
+};
+
+const setupShowPastYearsButton = (): void => {
+    // Remove any existing listener by replacing the button
+    const existingButton = document.getElementById('show-past-years-btn');
+    if (existingButton) {
+        const newButton = existingButton.cloneNode(true) as HTMLButtonElement;
+        existingButton.parentNode?.replaceChild(newButton, existingButton);
+        
+        newButton.addEventListener('click', (): void => {
+            showPastYears = true;
+            renderYearsList(currentYearsAndWeeks, currentNowDate, currentDateOfBirth, showPastYears);
+            setupShowPastYearsButton(); // Re-setup in case button needs to be removed
+        });
+    }
 };
 
 const setupDobInputListeners = (): void => {
@@ -55,7 +83,15 @@ const setupDobInputListeners = (): void => {
         setDateOfBirth('');
 
         const years = getRangeOfYears();
-        renderYearsList(calculateWeeksInYears(years.startYear, years.endYear), new Date(years.currentYear), null);
+        
+        // Reset state when DOB is deleted
+        currentYearsAndWeeks = calculateWeeksInYears(years.startYear, years.endYear);
+        currentNowDate = new Date(years.currentYear);
+        currentDateOfBirth = null;
+        showPastYears = false;
+        
+        renderYearsList(currentYearsAndWeeks, currentNowDate, null, showPastYears);
+        setupShowPastYearsButton();
     });
 };
 
@@ -121,7 +157,15 @@ window.onload = function (): void {
     renderCurrentYearLink();
 
     const years = getRangeOfYears();
-    renderYearsList(calculateWeeksInYears(years.startYear, years.endYear), new Date(years.currentYear), null);
+    
+    // Initialize state
+    currentYearsAndWeeks = calculateWeeksInYears(years.startYear, years.endYear);
+    currentNowDate = new Date(years.currentYear);
+    currentDateOfBirth = null;
+    showPastYears = false;
+    
+    renderYearsList(currentYearsAndWeeks, currentNowDate, null, showPastYears);
+    setupShowPastYearsButton();
 
     const storedDateOfBirth: string | null = getDateOfBirth();
     const dobComponent = getDobInputComponent();
