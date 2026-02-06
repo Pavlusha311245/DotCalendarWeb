@@ -38,14 +38,33 @@ export class NoteDialog extends HTMLDialogElement {
 
     openNote(weekId: string) {
         this.currentWeekId = weekId;
-        this.textarea.value = getWeekNote(weekId) ?? '';
+        this.loadNote();
         this.showModal();
+    }
+
+    // Public method to set the week ID
+    setWeek(weekId: string): void {
+        this.currentWeekId = weekId;
+    }
+
+    // Public method to load note for current week
+    loadNote(): void {
+        if (!this.currentWeekId) return;
+        this.textarea.value = getWeekNote(this.currentWeekId) ?? '';
     }
 
     private save() {
         if (!this.currentWeekId) return;
 
-        setWeekNote(this.currentWeekId, this.textarea.value);
+        const noteValue = this.textarea.value;
+        setWeekNote(this.currentWeekId, noteValue);
+
+        // Update the dot's note indicator
+        const dot = document.querySelector(`[data-week="${this.currentWeekId}"]`) as any;
+        if (dot && dot.updateNoteStatus) {
+            dot.updateNoteStatus();
+        }
+
         this.close();
     }
 }

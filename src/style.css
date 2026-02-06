@@ -339,6 +339,33 @@
         cursor: not-allowed;
     }
 
+    /* Highlight dots that have notes */
+    .dot.dot-has-notes {
+        box-shadow: 0 0 0 2px var(--color-bright-blue),
+                    0 0 8px var(--color-bright-blue),
+                    0 4px 12px rgba(193, 232, 255, 0.4);
+        position: relative;
+    }
+
+    .dot.dot-has-notes::after {
+        content: '';
+        position: absolute;
+        inset: -3px;
+        border-radius: inherit;
+        border: 2px solid var(--color-bright-blue);
+        opacity: 0.5;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            box-shadow: 0 0 0 0 rgba(193, 232, 255, 0.7);
+        }
+        50% {
+            box-shadow: 0 0 0 4px rgba(193, 232, 255, 0);
+        }
+    }
+
     .dot.dot-gray:hover {
         cursor: not-allowed;
         transform: none;

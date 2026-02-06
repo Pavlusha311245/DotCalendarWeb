@@ -8,19 +8,29 @@ import {
 } from "./utils/date-calculation.ts";
 import {isOnboardingComplete, startOnboarding} from "./utils/onboarding.ts";
 import './components/calendar-dot.ts'
+import './components/dob-input.ts'
 import './components/note-dialog.ts'
 import {renderCurrentYearLink, renderYearsList} from "./utils/render.ts";
 
+const getDobInputComponent = (): HTMLElement | null => {
+    return document.querySelector('dob-input');
+};
+
 const handleDobChange = (): void => {
+    const dobComponent = getDobInputComponent();
+    if (!dobComponent) return;
+
+    const dobInput = (dobComponent as any).getValue?.() || '';
     const maxDate: string = new Date().toISOString().split("T")[0];
-    if (dateOfBirthInput.value > maxDate) {
-        dateOfBirthInput.value = maxDate
+
+    if (dobInput > maxDate) {
+        (dobComponent as any).setValue?.(maxDate);
     }
 
     const years = getRangeOfYears();
 
-    const dateOfBirth: Date = new Date(dateOfBirthInput.value);
-    setDateOfBirth(dateOfBirthInput.value)
+    const dateOfBirth: Date = new Date(dobInput);
+    setDateOfBirth(dobInput);
     const endDate: Date = addYears(dateOfBirth, 100);
     const nowDate: Date = new Date();
     const yearsAndWeeks: YearWeeks[] = calculateWeeksInYears(years.startYear, endDate);
@@ -32,18 +42,22 @@ const handleDobChange = (): void => {
     (document.getElementById('remainingWeeks') as HTMLSpanElement).textContent = `${weeksInfo.remainingWeeks}`;
 };
 
-const dateOfBirthInput: HTMLInputElement = document.getElementById('date-of-birth') as HTMLInputElement;
-dateOfBirthInput.addEventListener('change', handleDobChange);
-dateOfBirthInput.max = new Date().toISOString().split("T")[0];
+const setupDobInputListeners = (): void => {
+    const dobComponent = getDobInputComponent();
+    if (!dobComponent) return;
 
-const deleteDateOfBirthButton: HTMLButtonElement = document.getElementById('delete-dob') as HTMLButtonElement;
-deleteDateOfBirthButton.addEventListener('click', (): void => {
-    dateOfBirthInput.value = '';
-    setDateOfBirth('');
+    const maxDate: string = new Date().toISOString().split("T")[0];
+    (dobComponent as any).setMax?.(maxDate);
 
-    const years = getRangeOfYears();
-    renderYearsList(calculateWeeksInYears(years.startYear, years.endYear), new Date(years.currentYear), null);
-});
+    dobComponent.addEventListener('dob-change', handleDobChange);
+    dobComponent.addEventListener('dob-delete', (): void => {
+        (dobComponent as any).clear?.();
+        setDateOfBirth('');
+
+        const years = getRangeOfYears();
+        renderYearsList(calculateWeeksInYears(years.startYear, years.endYear), new Date(years.currentYear), null);
+    });
+};
 
 // Theme toggle
 const initTheme = (): void => {
@@ -82,6 +96,20 @@ themeToggleButton.addEventListener('click', (): void => {
     updateThemeIcon(newTheme);
 });
 
+// Handle dot clicks - allow opening notes for old weeks
+document.addEventListener('dot:click', (event: Event): void => {
+    const customEvent = event as CustomEvent;
+    const week = customEvent.detail?.week;
+    if (!week) return;
+
+    const noteDialog = document.querySelector('dialog[is="note-dialog"]') as HTMLDialogElement;
+    if (noteDialog && 'open' in noteDialog) {
+        (noteDialog as any).setWeek?.(week);
+        (noteDialog as any).loadNote?.();
+        noteDialog.showModal?.();
+    }
+});
+
 window.onload = function (): void {
     initTheme();
 
@@ -96,8 +124,13 @@ window.onload = function (): void {
     renderYearsList(calculateWeeksInYears(years.startYear, years.endYear), new Date(years.currentYear), null);
 
     const storedDateOfBirth: string | null = getDateOfBirth();
-    if (storedDateOfBirth) {
-        dateOfBirthInput.value = storedDateOfBirth;
+    const dobComponent = getDobInputComponent();
+
+    if (storedDateOfBirth && dobComponent) {
+        (dobComponent as unknown).setValue?.(storedDateOfBirth);
         handleDobChange();
     }
+
+    // Setup DOB input listeners after component is loaded
+    setTimeout(() => setupDobInputListeners(), 100);
 };

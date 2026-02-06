@@ -12,11 +12,37 @@ export class CalendarDot extends HTMLElement {
             this.dataset.week = week;
         }
 
+        // Check if this week has notes and add highlight class
+        this.checkForNotes();
+
         this.addEventListener('click', this.onClick);
     }
 
     disconnectedCallback() {
         this.removeEventListener('click', this.onClick);
+    }
+
+    private checkForNotes(): void {
+        const week = this.dataset.week;
+        if (!week) return;
+
+        const notes = localStorage.getItem(`note-${week}`);
+        if (notes && notes.trim()) {
+            this.classList.add('dot-has-notes');
+        }
+    }
+
+    // Public method to check and update note status
+    updateNoteStatus(): void {
+        const week = this.dataset.week;
+        if (!week) return;
+
+        const notes = localStorage.getItem(`note-${week}`);
+        if (notes && notes.trim()) {
+            this.classList.add('dot-has-notes');
+        } else {
+            this.classList.remove('dot-has-notes');
+        }
     }
 
     private onClick = () => {
