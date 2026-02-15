@@ -12,13 +12,25 @@ import './components/dob-input.ts'
 import './components/note-dialog.ts'
 import {renderCurrentYearLink, renderYearsList} from "./utils/render.ts";
 
+interface DobInputElement extends HTMLElement {
+    getValue?: () => string;
+    setValue?: (value: string) => void;
+    setMax?: (value: string) => void;
+    clear?: () => void;
+}
+
+interface NoteDialogElement extends HTMLDialogElement {
+    setWeek?: (week: unknown) => void;
+    loadNote?: () => void;
+}
+
 // State to track whether past years are shown
 let showPastYears: boolean = false;
 let currentYearsAndWeeks: YearWeeks[] = [];
 let currentNowDate: Date = new Date();
 let currentDateOfBirth: Date | null = null;
 
-const getDobInputComponent = (): HTMLElement | null => {
+const getDobInputComponent = (): DobInputElement | null => {
     return document.querySelector('dob-input');
 };
 
@@ -26,11 +38,11 @@ const handleDobChange = (): void => {
     const dobComponent = getDobInputComponent();
     if (!dobComponent) return;
 
-    const dobInput = (dobComponent as any).getValue?.() || '';
+    const dobInput = dobComponent.getValue?.() || '';
     const maxDate: string = new Date().toISOString().split("T")[0];
 
     if (dobInput > maxDate) {
-        (dobComponent as any).setValue?.(maxDate);
+        dobComponent.setValue?.(maxDate);
     }
 
     const years = getRangeOfYears();
@@ -75,11 +87,11 @@ const setupDobInputListeners = (): void => {
     if (!dobComponent) return;
 
     const maxDate: string = new Date().toISOString().split("T")[0];
-    (dobComponent as any).setMax?.(maxDate);
+    dobComponent.setMax?.(maxDate);
 
     dobComponent.addEventListener('dob-change', handleDobChange);
     dobComponent.addEventListener('dob-delete', (): void => {
-        (dobComponent as any).clear?.();
+        dobComponent.clear?.();
         setDateOfBirth('');
 
         const years = getRangeOfYears();
@@ -138,10 +150,10 @@ document.addEventListener('dot:click', (event: Event): void => {
     const week = customEvent.detail?.week;
     if (!week) return;
 
-    const noteDialog = document.querySelector('dialog[is="note-dialog"]') as HTMLDialogElement;
+    const noteDialog = document.querySelector('dialog[is="note-dialog"]') as NoteDialogElement | null;
     if (noteDialog && 'open' in noteDialog) {
-        (noteDialog as any).setWeek?.(week);
-        (noteDialog as any).loadNote?.();
+        noteDialog.setWeek?.(week);
+        noteDialog.loadNote?.();
         noteDialog.showModal?.();
     }
 });
@@ -171,7 +183,7 @@ window.onload = function (): void {
     const dobComponent = getDobInputComponent();
 
     if (storedDateOfBirth && dobComponent) {
-        (dobComponent as unknown).setValue?.(storedDateOfBirth);
+        dobComponent.setValue?.(storedDateOfBirth);
         handleDobChange();
     }
 

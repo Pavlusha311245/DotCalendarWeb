@@ -44,12 +44,6 @@ For production build recommended to use any static server, for example **Nginx**
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the tags on this repository.
 
-## Support
-
-The project is being developed with the support of IDE from JetBrains
-
-  <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains Logo (Main) logo.">
-
 ## License
 
 This project is licensed under the MIT - see the [LICENSE](LICENSE) file for details.

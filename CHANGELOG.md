@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v0.6.0 - [2026/xx/xx]
+## v0.6.0 - [2026/02/15]
 
 - **Build System**: Migrate from Vite to Bun v1.3.6+
 - **Styling**: Implement dual theme support (Dark/Light)
@@ -12,6 +12,7 @@
   - Reduced padding for compact block design
   - Full-width input field with integrated delete button
   - Semantic HTML5 structure with ARIA labels
+  - Week notes indicator (dots with pulse animation)
 - **Mobile Optimization**:
   - Support for notch/Dynamic Island (viewport-fit=cover)
   - Safe area inset support for devices with curved edges
@@ -21,6 +22,7 @@
   - Strict TypeScript mode enforced
   - ESLint configuration updated
   - Remove author metadata from SEO
+  - Fixed TypeScript any usage in note-dialog component
 
 # v0.5.0 - [2025/12/21]
 

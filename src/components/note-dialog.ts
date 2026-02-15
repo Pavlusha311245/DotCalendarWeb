@@ -60,9 +60,9 @@ export class NoteDialog extends HTMLDialogElement {
         setWeekNote(this.currentWeekId, noteValue);
 
         // Update the dot's note indicator
-        const dot = document.querySelector(`[data-week="${this.currentWeekId}"]`) as any;
-        if (dot && dot.updateNoteStatus) {
-            dot.updateNoteStatus();
+        const dot = document.querySelector(`[data-week="${this.currentWeekId}"]`);
+        if (dot && 'updateNoteStatus' in dot && typeof (dot as { updateNoteStatus: () => void }).updateNoteStatus === 'function') {
+            (dot as { updateNoteStatus: () => void }).updateNoteStatus();
         }
 
         this.close();
