@@ -1,5 +1,29 @@
 # CHANGELOG
 
+## v0.6.0 - [2026/02/15]
+
+- **Build System**: Migrate from Vite to Bun v1.3.6+
+- **Styling**: Implement dual theme support (Dark/Light)
+- **Theme Toggle**: Add theme switcher button in navigation
+- **Design System**: Cool Navy Blue color palette with light theme variant
+- **UI/UX**:
+  - Glass morphism effects for inputs and buttons
+  - Improved mobile responsiveness with safe-area-inset support
+  - Reduced padding for compact block design
+  - Full-width input field with integrated delete button
+  - Semantic HTML5 structure with ARIA labels
+  - Week notes indicator (dots with pulse animation)
+- **Mobile Optimization**:
+  - Support for notch/Dynamic Island (viewport-fit=cover)
+  - Safe area inset support for devices with curved edges
+  - Responsive text sizes and icon sizing
+- **SEO**: Remove SEO metatags and add robots.txt blocking
+- **Code Quality**:
+  - Strict TypeScript mode enforced
+  - ESLint configuration updated
+  - Remove author metadata from SEO
+  - Fixed TypeScript any usage in note-dialog component
+
 # v0.5.0 - [2025/12/21]
 
 - Update ui/ux design

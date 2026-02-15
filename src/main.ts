@@ -1,164 +1,192 @@
+import {addYears} from 'date-fns';
+import {getDateOfBirth, initStorage, setDateOfBirth} from "./utils/storage.ts";
 import {
-    differenceInWeeks,
-    addWeeks,
-    addYears,
-    startOfWeek,
-    endOfWeek
-} from 'date-fns';
+    calculatePassedAndRemainingWeeks,
+    calculateWeeksInYears, getRangeOfYears,
+    WeeksInfo,
+    YearWeeks
+} from "./utils/date-calculation.ts";
+import {isOnboardingComplete, startOnboarding} from "./utils/onboarding.ts";
+import './components/calendar-dot.ts'
+import './components/dob-input.ts'
+import './components/note-dialog.ts'
+import {renderCurrentYearLink, renderYearsList} from "./utils/render.ts";
 
-type YearWeeks = {
-    year: number;
-    weeksCount: number;
-};
-
-type WeeksInfo = {
-    totalWeeks: number;
-    passedWeeks: number;
-    remainingWeeks: number;
+interface DobInputElement extends HTMLElement {
+    getValue?: () => string;
+    setValue?: (value: string) => void;
+    setMax?: (value: string) => void;
+    clear?: () => void;
 }
 
-const calculateYearWeeks = (year: number): YearWeeks => {
-    const startOfYear: Date = startOfWeek(new Date(year, 0, 1));
-    const endOfYear: Date = endOfWeek(new Date(year, 11, 31));
-    const weeksCount: number = differenceInWeeks(endOfYear, startOfYear);
-    return {year, weeksCount};
-};
-
-const calculateWeeksInYears = (startDate: Date, endDate: Date): YearWeeks[] => {
-    const years: number[] = Array.from(
-        {length: endDate.getFullYear() - startDate.getFullYear() + 1},
-        (_, idx) => idx + startDate.getFullYear()
-    );
-    return years.map(calculateYearWeeks);
-};
-
-const createElementWithClass = (
-    tagName: string,
-    className: string,
-    textContent: string
-): HTMLElement => {
-    const element: HTMLElement = document.createElement(tagName);
-    element.className = className;
-    element.textContent = textContent;
-    return element;
-};
-
-const generateDivElement = (
-    year: number,
-    weeksCount: number,
-    dob: Date,
-    currentDate: Date
-): HTMLElement => {
-    const divElement: HTMLElement = createElementWithClass('div', 'mt-2 flex flex-wrap gap-1', '');
-
-    for (let i: number = 0; i < weeksCount; i++) {
-        const weekDiv: HTMLElement = createElementWithClass('div', 'dot', '');
-        const weekDate: Date = addWeeks(new Date(year, 0, 1), i);
-        weekDiv.id = `week-${year}-${i + 1}`;
-
-        if (weekDate < dob) {
-            weekDiv.classList.add('dot-gray');
-        } else if (weekDate <= currentDate) {
-            weekDiv.classList.add('dot-red');
-            weekDiv.addEventListener('click', () => showWeekInfo(weekDiv.id));
-        } else {
-            weekDiv.classList.add('dot-green');
-            weekDiv.addEventListener('click', () => showWeekInfo(weekDiv.id));
-        }
-
-        divElement.appendChild(weekDiv);
-    }
-    return divElement;
-};
-
-const showWeekInfo = (id: string) => {
-    const dialog = document.getElementById("note-dialog") as HTMLDialogElement;
-
-    const localStorageData = localStorage.getItem(id) || "";
-
-    const textarea = dialog.querySelector("textarea") as HTMLTextAreaElement;
-    textarea!.value = localStorageData;
-
-    dialog.querySelector('#save-note')?.addEventListener('click', () => {
-        localStorage.setItem(id, textarea.value);
-        dialog.close();
-    })
-
-    dialog.showModal();
+interface NoteDialogElement extends HTMLDialogElement {
+    setWeek?: (week: unknown) => void;
+    loadNote?: () => void;
 }
 
-const generateYearsList = (yearsAndWeeks: YearWeeks[], nowDate: Date, dob: Date): void => {
-    const yearsList: HTMLElement = document.getElementById('yearsList') as HTMLElement;
-    yearsList.innerHTML = '';
+// State to track whether past years are shown
+let showPastYears: boolean = false;
+let currentYearsAndWeeks: YearWeeks[] = [];
+let currentNowDate: Date = new Date();
+let currentDateOfBirth: Date | null = null;
 
-    const fragment: DocumentFragment = document.createDocumentFragment();
-
-    yearsAndWeeks.forEach(({year, weeksCount}) => {
-        const yearElement: HTMLElement = createElementWithClass('h2', 'text-xl font-bold text-center', year.toString());
-        yearElement.id = `year${year}`;
-        const flexDivElement: HTMLElement = generateDivElement(year, weeksCount, dob, nowDate);
-        const outerDivElement: HTMLElement = createElementWithClass('div', 'flex gap-5 items-center', '');
-        outerDivElement.append(yearElement, flexDivElement);
-
-        fragment.appendChild(outerDivElement)
-    });
-
-    yearsList.appendChild(fragment)
-};
-
-const calculatePassedAndRemainingWeeks = (yearsAndWeeks: YearWeeks[], currentDate: Date): WeeksInfo => {
-    let totalWeeks: number = 0;
-    let passedWeeks: number = 0;
-    for (const yearData of yearsAndWeeks) {
-        totalWeeks += yearData.weeksCount;
-        if (yearData.year < currentDate.getFullYear()) {
-            passedWeeks += yearData.weeksCount;
-        } else if (yearData.year == currentDate.getFullYear()) {
-            const startOfYear = startOfWeek(new Date(yearData.year, 0, 1));
-            passedWeeks += differenceInWeeks(currentDate, startOfYear);
-        }
-    }
-    return {totalWeeks, passedWeeks, remainingWeeks: totalWeeks - passedWeeks};
+const getDobInputComponent = (): DobInputElement | null => {
+    return document.querySelector('dob-input');
 };
 
 const handleDobChange = (): void => {
-    const inputDateOfBirth: HTMLInputElement = (document.getElementById("date-of-birth") as HTMLInputElement);
+    const dobComponent = getDobInputComponent();
+    if (!dobComponent) return;
+
+    const dobInput = dobComponent.getValue?.() || '';
     const maxDate: string = new Date().toISOString().split("T")[0];
-    if (inputDateOfBirth.value > maxDate) {
-        inputDateOfBirth.value = maxDate
+
+    if (dobInput > maxDate) {
+        dobComponent.setValue?.(maxDate);
     }
 
-    const startDate: Date = new Date(inputDateOfBirth.value);
-    localStorage.setItem('dob', inputDateOfBirth.value);
-    const endDate: Date = addYears(startDate, 100);
-    const nowDate: Date = new Date();
-    const yearsAndWeeks: YearWeeks[] = calculateWeeksInYears(startDate, endDate);
+    const years = getRangeOfYears();
 
-    generateYearsList(yearsAndWeeks, nowDate, startDate);
+    const dateOfBirth: Date = new Date(dobInput);
+    setDateOfBirth(dobInput);
+    const endDate: Date = addYears(dateOfBirth, 100);
+    const nowDate: Date = new Date();
+    const yearsAndWeeks: YearWeeks[] = calculateWeeksInYears(years.startYear, endDate);
+
+    // Store current state for button click handler
+    currentYearsAndWeeks = yearsAndWeeks;
+    currentNowDate = nowDate;
+    currentDateOfBirth = dateOfBirth;
+    showPastYears = false; // Reset to false when DOB changes
+
+    renderYearsList(yearsAndWeeks, nowDate, dateOfBirth, showPastYears);
+    setupShowPastYearsButton();
 
     const weeksInfo: WeeksInfo = calculatePassedAndRemainingWeeks(yearsAndWeeks, nowDate);
-
-    const infoPassedElement: HTMLElement = document.getElementById('infoPassed') as HTMLElement;
-    infoPassedElement.textContent = `Passed weeks: ${weeksInfo.passedWeeks}`;
-
-    const infoRemainingElement: HTMLElement = document.getElementById('infoRemaining') as HTMLElement;
-    infoRemainingElement.textContent = `Remaining weeks: ${weeksInfo.remainingWeeks}`;
+    (document.getElementById('passedWeeks') as HTMLSpanElement).textContent = `${weeksInfo.passedWeeks}`;
+    (document.getElementById('remainingWeeks') as HTMLSpanElement).textContent = `${weeksInfo.remainingWeeks}`;
 };
 
-(document.querySelector('#date-of-birth') as HTMLInputElement).addEventListener('change', handleDobChange);
+const setupShowPastYearsButton = (): void => {
+    // Remove any existing listener by replacing the button
+    const existingButton = document.getElementById('show-past-years-btn');
+    if (existingButton) {
+        const newButton = existingButton.cloneNode(true) as HTMLButtonElement;
+        existingButton.parentNode?.replaceChild(newButton, existingButton);
+        
+        newButton.addEventListener('click', (): void => {
+            showPastYears = true;
+            renderYearsList(currentYearsAndWeeks, currentNowDate, currentDateOfBirth, showPastYears);
+            setupShowPastYearsButton(); // Re-setup in case button needs to be removed
+        });
+    }
+};
+
+const setupDobInputListeners = (): void => {
+    const dobComponent = getDobInputComponent();
+    if (!dobComponent) return;
+
+    const maxDate: string = new Date().toISOString().split("T")[0];
+    dobComponent.setMax?.(maxDate);
+
+    dobComponent.addEventListener('dob-change', handleDobChange);
+    dobComponent.addEventListener('dob-delete', (): void => {
+        dobComponent.clear?.();
+        setDateOfBirth('');
+
+        const years = getRangeOfYears();
+        
+        // Reset state when DOB is deleted
+        currentYearsAndWeeks = calculateWeeksInYears(years.startYear, years.endYear);
+        currentNowDate = new Date(years.currentYear);
+        currentDateOfBirth = null;
+        showPastYears = false;
+        
+        renderYearsList(currentYearsAndWeeks, currentNowDate, null, showPastYears);
+        setupShowPastYearsButton();
+    });
+};
+
+// Theme toggle
+const initTheme = (): void => {
+    const html = document.documentElement;
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+};
+
+const updateThemeIcon = (theme: string): void => {
+    const sunCircle = document.getElementById('sun-circle') as HTMLElement | null;
+    const sunRays = document.getElementById('sun-rays') as HTMLElement | null;
+    const moon = document.getElementById('moon') as HTMLElement | null;
+
+    if (!sunCircle || !sunRays || !moon) return;
+
+    if (theme === 'light') {
+        sunCircle.style.display = 'none';
+        sunRays.style.display = 'none';
+        moon.style.display = 'block';
+    } else {
+        sunCircle.style.display = 'block';
+        sunRays.style.display = 'block';
+        moon.style.display = 'none';
+    }
+};
+
+const themeToggleButton: HTMLButtonElement = document.getElementById('theme-toggle') as HTMLButtonElement;
+themeToggleButton.addEventListener('click', (): void => {
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-theme') || 'dark';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
+});
+
+// Handle dot clicks - allow opening notes for old weeks
+document.addEventListener('dot:click', (event: Event): void => {
+    const customEvent = event as CustomEvent;
+    const week = customEvent.detail?.week;
+    if (!week) return;
+
+    const noteDialog = document.querySelector('dialog[is="note-dialog"]') as NoteDialogElement | null;
+    if (noteDialog && 'open' in noteDialog) {
+        noteDialog.setWeek?.(week);
+        noteDialog.loadNote?.();
+        noteDialog.showModal?.();
+    }
+});
 
 window.onload = function (): void {
-    const inputDateOfBirth: HTMLInputElement = document.getElementById("date-of-birth") as HTMLInputElement
-    inputDateOfBirth.max = new Date().toISOString().split("T")[0];
+    initTheme();
 
-    const currentYearLink = document.getElementById('current-year') as HTMLLinkElement;
-    const currentYear = new Date().getFullYear();
-    currentYearLink.href = `#year${currentYear}`;
-    currentYearLink.textContent = `${currentYear}`
+    if (!isOnboardingComplete()) {
+        startOnboarding();
+    }
 
-    const storedDOB: string | null = localStorage.getItem('dob');
-    if (storedDOB) {
-        inputDateOfBirth.value = storedDOB;
+    initStorage()
+    renderCurrentYearLink();
+
+    const years = getRangeOfYears();
+    
+    // Initialize state
+    currentYearsAndWeeks = calculateWeeksInYears(years.startYear, years.endYear);
+    currentNowDate = new Date(years.currentYear);
+    currentDateOfBirth = null;
+    showPastYears = false;
+    
+    renderYearsList(currentYearsAndWeeks, currentNowDate, null, showPastYears);
+    setupShowPastYearsButton();
+
+    const storedDateOfBirth: string | null = getDateOfBirth();
+    const dobComponent = getDobInputComponent();
+
+    if (storedDateOfBirth && dobComponent) {
+        dobComponent.setValue?.(storedDateOfBirth);
         handleDobChange();
     }
+
+    // Setup DOB input listeners after component is loaded
+    setTimeout(() => setupDobInputListeners(), 100);
 };

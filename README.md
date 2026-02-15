@@ -1,6 +1,6 @@
 # DotCalendar
 
-<img src="./public/logo.webp" width="80" alt="DotCalendar Logo">
+<img src="public/logo.webp" width="1024" alt="DotCalendar Logo" style="width: 80px">
 
 ----
 
@@ -11,7 +11,7 @@ transience of life, which allows you to make more global plans, because 1 point 
 
 ## Requirements
 
-- Bun v1.0.0 or higher
+- Bun v1.3.0 or higher
 
 ### Installation
 
@@ -43,12 +43,6 @@ For production build recommended to use any static server, for example **Nginx**
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the tags on this repository.
-
-## Support
-
-The project is being developed with the support of IDE from JetBrains
-
-  <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains Logo (Main) logo.">
 
 ## License
 

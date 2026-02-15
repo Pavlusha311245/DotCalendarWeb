@@ -3,100 +3,79 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>It's time to live</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DotCalendar | It's time to live</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
     <!-- Favicons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest" crossorigin="use-credentials">
-    <link rel="shortcut icon" href="/favicons/favicon.ico">
+    <link rel="shortcut icon" href="/favicon/favicon.ico">
     <meta name="msapplication-TileColor" content="#2d89ef">
     <meta name="msapplication-config" content="/favicons/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
-
-    <!-- SEO -->
-    <meta name="keywords" content="life calendar, life in weeks, time management, productivity, life visualization">
-    <meta name="description" content="Visualize your life in weeks and make the most of your time.">
-    <meta name="author" content="Pavel Zavadski">
-    <meta property="og:title" content="It's time to live">
-    <meta property="og:description" content="Visualize your life in weeks and make the most of your time.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://dotcalendar.pavlusha.me/">
-    <meta property="og:image" content="https://dotcalendar.pavlusha.me/banner.webp">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="It's time to live">
-    <meta name="twitter:description" content="Visualize your life in weeks and make the most of your time.">
-    <meta name="twitter:image" content="https://dotcalendar.pavlusha.me/banner.webp">
 
     <!-- Styles -->
     <link href="src/style.css" rel="stylesheet">
 </head>
 <body>
-<main>
-    <div id="progress" class="progress"></div>
 
+<!-- Progress Bar -->
+<div id="progress" class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+
+<!-- Main Content -->
+<main class="relative" id="content">
     <section class="min-h-screen main-bg text-gray-200 py-10" id="start">
         <div class="container mx-auto px-5">
-            <!--Years of Your Life-->
+            <!-- Years of Your Life -->
             <div class="order-2 flex flex-col gap-1 relative">
-                <div>
-                    <div id="infoPassed" class="text-base lg:text-xl font-bold text-center mt-5"></div>
-                    <div id="infoRemaining" class="text-base lg:text-xl font-bold text-center mt-2"></div>
-                </div>
 
-                <div id="yearsList" class="mt-10 mb-40 mx-auto space-y-5 relative"></div>
+                <div id="yearsList" class="mt-10 mb-40 mx-auto space-y-5 relative" role="region" aria-label="Calendar weeks visualization"></div>
 
-                <div class="bottom-0 left-0 right-0 fixed flex flex-col justify-center items-center">
-                    <div class="px-3 rounded-lg flex justify-center flex-wrap gap-3">
-                        <a id="current-year" class="btn-glass btn-sm">Сurrent year</a>
-                        <a href='#start' class="btn-glass btn-sm">
-                            <svg class="w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                <path fill="#f5f5f5"
+                <footer class="bottom-0 left-0 right-0 fixed flex flex-col justify-center items-center px-4 pb-2 gap-2" style="padding-left: max(1rem, env(safe-area-inset-left)); padding-right: max(1rem, env(safe-area-inset-right)); padding-bottom: max(0.5rem, env(safe-area-inset-bottom));">
+                    <nav class="w-full max-w-sm flex gap-2" aria-label="Navigation">
+                        <a id="current-year" class="btn-glass w-full text-center text-sm" href="#start" title="Go to current year">Сurrent year</a>
+                        <button id="theme-toggle" type="button" class="btn-glass p-2 hover:opacity-80 transition-opacity" aria-label="Toggle theme" title="Toggle dark/light theme">
+                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <circle cx="12" cy="12" r="5" id="sun-circle"/>
+                                <path id="sun-rays" d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m5.08 5.08l4.24 4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m5.08-5.08l4.24-4.24"/>
+                                <path id="moon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" style="display: none;"/>
+                            </svg>
+                        </button>
+                        <a href='#start' class="btn-glass w-full flex items-center justify-center gap-1" title="Go to top" aria-label="Go to top">
+                            <span class="text-sm">To top</span>
+                            <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true">
+                                <path fill="currentColor"
                                       d="M342.6 81.4C330.1 68.9 309.8 68.9 297.3 81.4L137.3 241.4C124.8 253.9 124.8 274.2 137.3 286.7C149.8 299.2 170.1 299.2 182.6 286.7L288 181.3L288 552C288 569.7 302.3 584 320 584C337.7 584 352 569.7 352 552L352 181.3L457.4 286.7C469.9 299.2 490.2 299.2 502.7 286.7C515.2 274.2 515.2 253.9 502.7 241.4L342.7 81.4z"/>
                             </svg>
                         </a>
-                    </div>
+                    </nav>
 
-                    <div class="glass w-full max-w-md h-30 gap-3 p-3 m-5 mt-3 space-y-4 rounded-lg">
-                        <div class="rounded-lg space-x-2">
-                            <input type="date"
-                                   id="date-of-birth"
-                                   name="date-of-birth"
-                                   class="h-10 w-full rounded-md border bg-background text-sm
-                                           text-white
-                                           focus:outline-none focus:ring-2 focus:ring-ring
-                                           focus:ring-offset-2"/>
-                        </div>
+                    <form class="flex flex-col gap-1 w-full max-w-sm" aria-label="Date of birth input">
+                        <dob-input></dob-input>
+                    </form>
 
-                        <div class="flex justify-center items-center mt-2 text-xs">
-                            <div class="flex items-center space-x-2 w-full">
-                                <div class="dot dot-red"></div>
-                                <p>Weeks you've lived</p>
+                    <article class="glass w-full max-w-sm p-2 space-y-2 text-xs" aria-label="Life statistics">
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center space-x-2">
+                                <div class="dot dot-sm dot-red" aria-hidden="true">
+                                </div>
+                                <p style="color: var(--color-text-light);"><span id="passedWeeks" aria-live="polite">0</span> weeks you've lived</p>
                             </div>
-                            <div class="flex items-center space-x-2 w-full">
-                                <div class="dot dot-green"></div>
-                                <p>Weeks you've remaining</p>
+                            <div class="flex items-center space-x-2">
+                                <div class="dot dot-sm dot-green" aria-hidden="true"></div>
+                                <p style="color: var(--color-text-light);"><span id="remainingWeeks" aria-live="polite">0</span> weeks you've remaining</p>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </article>
+                </footer>
             </div>
         </div>
     </section>
 </main>
 
-<dialog id="note-dialog">
-    <textarea id="note" class="mt-3 note-textarea" rows="4" cols="50"></textarea>
-
-    <div class="flex justify-end items-center gap-3 mt-3">
-        <form method="dialog">
-            <button class="btn-glass">Cancel</button>
-        </form>
-        <button id="save-note" class="btn-glass">Save Note</button>
-    </div>
-</dialog>
+<dialog is="note-dialog" id="note-dialog"></dialog>
 
 <script type="module" src="src/main.ts"></script>
 
