@@ -1,70 +1,72 @@
-import {hasWeekNote} from "../utils/storage.ts";
+import { hasWeekNote } from "../utils/storage.ts";
 
 export class CalendarDot extends HTMLElement {
-    connectedCallback() {
-        this.classList.add('dot');
+  connectedCallback() {
+    this.classList.add("dot");
 
-        const color = this.getAttribute('color');
-        if (color) {
-            this.classList.add(`dot-${color}`);
-        }
-
-        const week = this.getAttribute('week');
-        if (week) {
-            this.dataset.week = week;
-        }
-
-        this.setAttribute('role', 'listitem');
-        this.setAttribute('tabindex', '0');
-
-        this.checkForNotes();
-
-        this.addEventListener('click', this.onClick);
-        this.addEventListener('keydown', this.onKeyDown);
+    const color = this.getAttribute("color");
+    if (color) {
+      this.classList.add(`dot-${color}`);
     }
 
-    disconnectedCallback() {
-        this.removeEventListener('click', this.onClick);
-        this.removeEventListener('keydown', this.onKeyDown);
+    const week = this.getAttribute("week");
+    if (week) {
+      this.dataset.week = week;
     }
 
-    private checkForNotes(): void {
-        const week = this.dataset.week;
-        if (!week) return;
+    this.setAttribute("role", "listitem");
+    this.setAttribute("tabindex", "0");
 
-        if (hasWeekNote(week)) {
-            this.classList.add('dot-has-notes');
-        }
+    this.checkForNotes();
+
+    this.addEventListener("click", this.onClick);
+    this.addEventListener("keydown", this.onKeyDown);
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener("click", this.onClick);
+    this.removeEventListener("keydown", this.onKeyDown);
+  }
+
+  private checkForNotes(): void {
+    const week = this.dataset.week;
+    if (!week) return;
+
+    if (hasWeekNote(week)) {
+      this.classList.add("dot-has-notes");
     }
+  }
 
-    updateNoteStatus(): void {
-        const week = this.dataset.week;
-        if (!week) return;
+  updateNoteStatus(): void {
+    const week = this.dataset.week;
+    if (!week) return;
 
-        if (hasWeekNote(week)) {
-            this.classList.add('dot-has-notes');
-        } else {
-            this.classList.remove('dot-has-notes');
-        }
+    if (hasWeekNote(week)) {
+      this.classList.add("dot-has-notes");
+    } else {
+      this.classList.remove("dot-has-notes");
     }
+  }
 
-    private onClick = () => {
-        this.dispatchEvent(new CustomEvent('dot:click', {
-            bubbles: true,
-            detail: {
-                week: this.dataset.week
-            }
-        }));
-    };
+  private onClick = () => {
+    this.dispatchEvent(
+      new CustomEvent("dot:click", {
+        bubbles: true,
+        detail: {
+          week: this.dataset.week,
+        },
+      }),
+    );
+  };
 
-    private onKeyDown = (event: KeyboardEvent) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            this.onClick();
-        }
-    };
+  private onKeyDown = (event: KeyboardEvent) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      this.onClick();
+    }
+  };
 }
 
-if (!customElements.get('calendar-dot')) {
-    customElements.define('calendar-dot', CalendarDot);
+if (!customElements.get("calendar-dot")) {
+  customElements.define("calendar-dot", CalendarDot);
 }

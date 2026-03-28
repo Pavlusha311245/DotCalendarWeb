@@ -1,20 +1,20 @@
-import {getWeekNote, setWeekNote} from "../utils/storage.ts";
-import {CalendarDot} from "./calendar-dot.ts";
+import { getWeekNote, setWeekNote } from "../utils/storage.ts";
+import { CalendarDot } from "./calendar-dot.ts";
 
 export class NoteDialog extends HTMLDialogElement {
-    private currentWeekId: string | null = null;
-    private textarea: HTMLTextAreaElement | null = null;
+  private currentWeekId: string | null = null;
+  private textarea: HTMLTextAreaElement | null = null;
 
-    connectedCallback() {
-        if (this.dataset.ready) return;
-        this.dataset.ready = 'true';
+  connectedCallback() {
+    if (this.dataset.ready) return;
+    this.dataset.ready = "true";
 
-        this.id = 'note-dialog';
-        this.className = 'w-full max-w-lg mx-auto px-5';
-        this.setAttribute('aria-modal', 'true');
-        this.setAttribute('aria-labelledby', 'note-dialog-label');
+    this.id = "note-dialog";
+    this.className = "w-full max-w-lg mx-auto px-5";
+    this.setAttribute("aria-modal", "true");
+    this.setAttribute("aria-labelledby", "note-dialog-label");
 
-        this.innerHTML = `
+    this.innerHTML = `
             <div class="flex flex-col gap-1">
                 <label id="note-dialog-label" class="text-xl" style="color: var(--color-text-light);">
                     Write your week-note here...
@@ -34,46 +34,42 @@ export class NoteDialog extends HTMLDialogElement {
             </div>
         `;
 
-        this.textarea = this.querySelector('textarea');
+    this.textarea = this.querySelector("textarea");
 
-        const saveButton = this.querySelector('#save-note');
-        if (saveButton) {
-            saveButton.addEventListener('click', () => this.save());
-        }
+    const saveButton = this.querySelector("#save-note");
+    if (saveButton) {
+      saveButton.addEventListener("click", () => this.save());
+    }
+  }
+
+  openNote(weekId: string) {
+    this.currentWeekId = weekId;
+    this.loadNote();
+    this.showModal();
+    this.textarea?.focus();
+  }
+
+  setWeek(weekId: string): void {
+    this.currentWeekId = weekId;
+  }
+
+  loadNote(): void {
+    if (!this.currentWeekId || !this.textarea) return;
+    this.textarea.value = getWeekNote(this.currentWeekId);
+  }
+
+  private save() {
+    if (!this.currentWeekId || !this.textarea) return;
+
+    setWeekNote(this.currentWeekId, this.textarea.value);
+
+    const dot = document.querySelector(`[data-week="${this.currentWeekId}"]`);
+    if (dot instanceof CalendarDot) {
+      dot.updateNoteStatus();
     }
 
-    openNote(weekId: string) {
-        this.currentWeekId = weekId;
-        this.loadNote();
-        this.showModal();
-        this.textarea?.focus();
-    }
-
-    setWeek(weekId: string): void {
-        this.currentWeekId = weekId;
-    }
-
-    loadNote(): void {
-        if (!this.currentWeekId || !this.textarea) return;
-        this.textarea.value = getWeekNote(this.currentWeekId);
-    }
-
-    private save() {
-        if (!this.currentWeekId || !this.textarea) return;
-
-        setWeekNote(this.currentWeekId, this.textarea.value);
-
-        const dot = document.querySelector(`[data-week="${this.currentWeekId}"]`);
-        if (dot instanceof CalendarDot) {
-            dot.updateNoteStatus();
-        }
-
-        this.close();
-    }
+    this.close();
+  }
 }
 
-customElements.define(
-    'note-dialog',
-    NoteDialog,
-    { extends: 'dialog' }
-);
+customElements.define("note-dialog", NoteDialog, { extends: "dialog" });
