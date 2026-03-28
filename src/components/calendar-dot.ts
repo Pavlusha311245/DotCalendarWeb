@@ -1,3 +1,5 @@
+import {hasWeekNote} from "../utils/storage.ts";
+
 export class CalendarDot extends HTMLElement {
     connectedCallback() {
         this.classList.add('dot');
@@ -12,33 +14,34 @@ export class CalendarDot extends HTMLElement {
             this.dataset.week = week;
         }
 
-        // Check if this week has notes and add highlight class
+        this.setAttribute('role', 'listitem');
+        this.setAttribute('tabindex', '0');
+
         this.checkForNotes();
 
         this.addEventListener('click', this.onClick);
+        this.addEventListener('keydown', this.onKeyDown);
     }
 
     disconnectedCallback() {
         this.removeEventListener('click', this.onClick);
+        this.removeEventListener('keydown', this.onKeyDown);
     }
 
     private checkForNotes(): void {
         const week = this.dataset.week;
         if (!week) return;
 
-        const notes = localStorage.getItem(`note-${week}`);
-        if (notes && notes.trim()) {
+        if (hasWeekNote(week)) {
             this.classList.add('dot-has-notes');
         }
     }
 
-    // Public method to check and update note status
     updateNoteStatus(): void {
         const week = this.dataset.week;
         if (!week) return;
 
-        const notes = localStorage.getItem(`note-${week}`);
-        if (notes && notes.trim()) {
+        if (hasWeekNote(week)) {
             this.classList.add('dot-has-notes');
         } else {
             this.classList.remove('dot-has-notes');
@@ -52,6 +55,13 @@ export class CalendarDot extends HTMLElement {
                 week: this.dataset.week
             }
         }));
+    };
+
+    private onKeyDown = (event: KeyboardEvent) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            this.onClick();
+        }
     };
 }
 

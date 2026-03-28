@@ -1,8 +1,9 @@
 import {getWeekNote, setWeekNote} from "../utils/storage.ts";
+import {CalendarDot} from "./calendar-dot.ts";
 
 export class NoteDialog extends HTMLDialogElement {
     private currentWeekId: string | null = null;
-    private textarea!: HTMLTextAreaElement;
+    private textarea: HTMLTextAreaElement | null = null;
 
     connectedCallback() {
         if (this.dataset.ready) return;
@@ -10,15 +11,18 @@ export class NoteDialog extends HTMLDialogElement {
 
         this.id = 'note-dialog';
         this.className = 'w-full max-w-lg mx-auto px-5';
+        this.setAttribute('aria-modal', 'true');
+        this.setAttribute('aria-labelledby', 'note-dialog-label');
 
         this.innerHTML = `
             <div class="flex flex-col gap-1">
-                <label class="text-xl" style="color: var(--color-text-light);">
+                <label id="note-dialog-label" class="text-xl" style="color: var(--color-text-light);">
                     Write your week-note here...
                 </label>
                 <textarea
                     class="mt-3 note-textarea"
                     rows="10"
+                    aria-label="Week note"
                 ></textarea>
             </div>
 
@@ -30,39 +34,38 @@ export class NoteDialog extends HTMLDialogElement {
             </div>
         `;
 
-        this.textarea = this.querySelector('textarea')!;
+        this.textarea = this.querySelector('textarea');
 
-        this.querySelector('#save-note')!
-            .addEventListener('click', () => this.save());
+        const saveButton = this.querySelector('#save-note');
+        if (saveButton) {
+            saveButton.addEventListener('click', () => this.save());
+        }
     }
 
     openNote(weekId: string) {
         this.currentWeekId = weekId;
         this.loadNote();
         this.showModal();
+        this.textarea?.focus();
     }
 
-    // Public method to set the week ID
     setWeek(weekId: string): void {
         this.currentWeekId = weekId;
     }
 
-    // Public method to load note for current week
     loadNote(): void {
-        if (!this.currentWeekId) return;
-        this.textarea.value = getWeekNote(this.currentWeekId) ?? '';
+        if (!this.currentWeekId || !this.textarea) return;
+        this.textarea.value = getWeekNote(this.currentWeekId);
     }
 
     private save() {
-        if (!this.currentWeekId) return;
+        if (!this.currentWeekId || !this.textarea) return;
 
-        const noteValue = this.textarea.value;
-        setWeekNote(this.currentWeekId, noteValue);
+        setWeekNote(this.currentWeekId, this.textarea.value);
 
-        // Update the dot's note indicator
         const dot = document.querySelector(`[data-week="${this.currentWeekId}"]`);
-        if (dot && 'updateNoteStatus' in dot && typeof (dot as { updateNoteStatus: () => void }).updateNoteStatus === 'function') {
-            (dot as { updateNoteStatus: () => void }).updateNoteStatus();
+        if (dot instanceof CalendarDot) {
+            dot.updateNoteStatus();
         }
 
         this.close();
