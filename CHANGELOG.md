@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v0.7.0 - [2026/xx/xx]
+
+- **Code Quality**:
+  - Replaces eslint with oxclint for improved linting performance and accuracy
+
 ## v0.6.0 - [2026/02/15]
 
 - **Build System**: Migrate from Vite to Bun v1.3.6+
