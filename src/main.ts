@@ -11,10 +11,12 @@ import { isOnboardingComplete, startOnboarding } from "./utils/onboarding.ts";
 import "./components/calendar-dot.ts";
 import "./components/dob-input.ts";
 import "./components/note-dialog.ts";
+import "./components/focus-view.ts";
 import { renderCurrentYearLink, renderYearsList } from "./utils/render.ts";
 import { getState, setState } from "./utils/state.ts";
 import { DOBInput } from "./components/dob-input.ts";
 import { NoteDialog } from "./components/note-dialog.ts";
+import { FocusView } from "./components/focus-view.ts";
 
 const getDobInputComponent = (): DOBInput | null => {
   return document.querySelector("dob-input");
@@ -54,6 +56,9 @@ const handleDobChange = (): void => {
   const remainingEl = document.getElementById("remainingWeeks");
   if (passedEl) passedEl.textContent = `${weeksInfo.passedWeeks}`;
   if (remainingEl) remainingEl.textContent = `${weeksInfo.remainingWeeks}`;
+
+  // Refresh focus view if open
+  getFocusView()?.refresh(yearsAndWeeks, nowDate, dateOfBirth);
 };
 
 let pastYearsBtnController: AbortController | null = null;
@@ -155,6 +160,43 @@ document.addEventListener("dot:click", (event: Event): void => {
   }
 });
 
+// Focus view helpers
+const getFocusView = (): FocusView | null =>
+  document.querySelector<FocusView>("focus-view");
+
+const setupFocusViewToggle = (): void => {
+  const btn = document.getElementById("focus-view-toggle");
+  if (!btn) return;
+
+  btn.addEventListener("click", (): void => {
+    const focusView = getFocusView();
+    if (!focusView) return;
+
+    if (focusView.isOpen) {
+      focusView.close();
+      btn.setAttribute("aria-pressed", "false");
+    } else {
+      const { yearsAndWeeks, nowDate, dateOfBirth } = getState();
+      focusView.open(yearsAndWeeks, nowDate, dateOfBirth);
+      btn.setAttribute("aria-pressed", "true");
+    }
+  });
+
+  // Sync button state when focus view is closed via its own close button or Escape
+  document.addEventListener("focus-close", (): void => {
+    btn.setAttribute("aria-pressed", "false");
+  });
+};
+
+// Refresh focus view notes after note-dialog closes (save or cancel)
+const setupNoteDialogRefresh = (): void => {
+  const noteDialog = document.querySelector('dialog[is="note-dialog"]') as NoteDialog | null;
+  if (!noteDialog) return;
+  noteDialog.addEventListener("close", (): void => {
+    getFocusView()?.refreshNotes();
+  });
+};
+
 window.onload = function (): void {
   initTheme();
 
@@ -214,4 +256,6 @@ window.onload = function (): void {
   }
 
   customElements.whenDefined("dob-input").then(() => setupDobInputListeners());
+  setupFocusViewToggle();
+  setupNoteDialogRefresh();
 };
