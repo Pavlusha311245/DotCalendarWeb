@@ -4,20 +4,20 @@
  */
 
 export class DOBInput extends HTMLElement {
-    private inputElement: HTMLInputElement | null = null;
-    private deleteButton: HTMLButtonElement | null = null;
+  private inputElement: HTMLInputElement | null = null;
+  private deleteButton: HTMLButtonElement | null = null;
 
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 
-    connectedCallback(): void {
-        this.render();
-        this.setupEventListeners();
-    }
+  connectedCallback(): void {
+    this.render();
+    this.setupEventListeners();
+  }
 
-    private render(): void {
-        this.innerHTML = `
+  private render(): void {
+    this.innerHTML = `
             <form class="flex flex-col gap-1 w-full max-w-sm" aria-label="Date of birth input">
                 <div class="relative w-full">
                     <input type="date"
@@ -47,56 +47,60 @@ export class DOBInput extends HTMLElement {
             </form>
         `;
 
-        this.inputElement = this.querySelector('#date-of-birth') as HTMLInputElement;
-        this.deleteButton = this.querySelector('#delete-dob') as HTMLButtonElement;
+    this.inputElement = this.querySelector("#date-of-birth") as HTMLInputElement;
+    this.deleteButton = this.querySelector("#delete-dob") as HTMLButtonElement;
+  }
+
+  private setupEventListeners(): void {
+    if (this.inputElement) {
+      this.inputElement.addEventListener("change", () => this.dispatchChangeEvent());
     }
 
-    private setupEventListeners(): void {
-        if (this.inputElement) {
-            this.inputElement.addEventListener('change', () => this.dispatchChangeEvent());
-        }
-
-        if (this.deleteButton) {
-            this.deleteButton.addEventListener('click', () => this.dispatchDeleteEvent());
-        }
+    if (this.deleteButton) {
+      this.deleteButton.addEventListener("click", () => this.dispatchDeleteEvent());
     }
+  }
 
-    private dispatchChangeEvent(): void {
-        this.dispatchEvent(new CustomEvent('dob-change', {
-            detail: { value: this.inputElement?.value },
-            bubbles: true,
-            composed: true
-        }));
-    }
+  private dispatchChangeEvent(): void {
+    this.dispatchEvent(
+      new CustomEvent("dob-change", {
+        detail: { value: this.inputElement?.value },
+        bubbles: true,
+        composed: true,
+      }),
+    );
+  }
 
-    private dispatchDeleteEvent(): void {
-        this.dispatchEvent(new CustomEvent('dob-delete', {
-            bubbles: true,
-            composed: true
-        }));
-    }
+  private dispatchDeleteEvent(): void {
+    this.dispatchEvent(
+      new CustomEvent("dob-delete", {
+        bubbles: true,
+        composed: true,
+      }),
+    );
+  }
 
-    getValue(): string {
-        return this.inputElement?.value || '';
-    }
+  getValue(): string {
+    return this.inputElement?.value || "";
+  }
 
-    setValue(value: string): void {
-        if (this.inputElement) {
-            this.inputElement.value = value;
-        }
+  setValue(value: string): void {
+    if (this.inputElement) {
+      this.inputElement.value = value;
     }
+  }
 
-    setMax(maxDate: string): void {
-        if (this.inputElement) {
-            this.inputElement.max = maxDate;
-        }
+  setMax(maxDate: string): void {
+    if (this.inputElement) {
+      this.inputElement.max = maxDate;
     }
+  }
 
-    clear(): void {
-        if (this.inputElement) {
-            this.inputElement.value = '';
-        }
+  clear(): void {
+    if (this.inputElement) {
+      this.inputElement.value = "";
     }
+  }
 }
 
-customElements.define('dob-input', DOBInput);
+customElements.define("dob-input", DOBInput);

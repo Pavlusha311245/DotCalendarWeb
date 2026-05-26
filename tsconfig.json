@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES2025",
     "useDefineForClassFields": true,
     "module": "Preserve",
-    "lib": ["DOM", "DOM.Iterable", "WebWorker", "ESNext"],
+    "lib": ["DOM", "DOM.Iterable", "WebWorker", "ES2025"],
     "skipLibCheck": true,
     "esModuleInterop": true,
 

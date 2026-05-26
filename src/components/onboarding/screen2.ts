@@ -1,7 +1,8 @@
 export const onboardingScreen2: HTMLElement = (() => {
-    const template = document.createElement('template');
+  const template = document.createElement("template");
+  const maxDate = new Date().toISOString().split("T")[0];
 
-    template.innerHTML = `
+  template.innerHTML = `
   <div id="onboarding-screen-2"
          class="px-10 text-slate-50 fixed w-full h-screen top-0 left-0 flex flex-col justify-center items-center glass overlay">
         <h2 class="text-xl font-bold text-center">One week — one note.</h2>
@@ -16,10 +17,33 @@ export const onboardingScreen2: HTMLElement = (() => {
             not just a counter of weeks lived.
         </p>
 
+        <div class="mt-8 w-full max-w-sm flex flex-col gap-2">
+            <label for="onboarding-dob" class="text-sm font-medium" style="color: var(--color-text-light);">
+                Your date of birth <span aria-hidden="true" style="color: var(--color-bright-blue);">*</span>
+            </label>
+            <input type="date"
+                   id="onboarding-dob"
+                   class="input-glass w-full text-sm"
+                   max="${maxDate}"
+                   required
+                   aria-label="Date of birth"
+                   aria-required="true"
+                   aria-describedby="onboarding-dob-error">
+            <p id="onboarding-dob-error"
+               class="text-xs"
+               style="color: var(--color-bright-blue); display: none;"
+               aria-live="polite">
+                Please enter your date of birth to continue.
+            </p>
+        </div>
+
         <div>
-            <button id="onboarding-screen-2-got-it" class="btn-glass mt-8">Got it!</button>
+            <button id="onboarding-screen-2-got-it" class="btn-glass mt-6" type="button" disabled
+                    style="opacity: 0.4; cursor: not-allowed;">
+                Get started
+            </button>
         </div>
     </div>`;
 
-    return template.content.firstElementChild as HTMLElement;
+  return template.content.firstElementChild as HTMLElement;
 })();

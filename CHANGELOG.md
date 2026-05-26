@@ -1,5 +1,40 @@
 # CHANGELOG
 
+## v0.7.0 - [2026/05/26]
+
+- **Platform & Build**
+  - TypeScript `target` and `lib` set to `ES2025`
+  - Bun build enabled `splitting: true`
+  - Tooling updated: `typescript ^6.0.2`, Bun `1.3.14`
+- **Performance**
+  - Scroll progress bar uses compositor-thread `transform: scaleX()` (instead of `width`)
+  - Added Firefox fallback for progress updates when scroll timelines are unavailable
+  - Added `content-visibility: auto` for off-screen year groups
+- **Accessibility & UX**
+  - Skip link and improved keyboard flow to main content
+  - Decorative progress bar marked `aria-hidden="true"`
+  - Global reduced-motion handling via `prefers-reduced-motion`
+  - `CalendarDot` keyboard behavior aligned with ARIA spec (Enter on `keydown`, Space on `keyup`)
+  - Note dialog supports light-dismiss and smooth entry/exit transitions
+- **Onboarding & Security**
+  - DOB in onboarding is required to continue
+  - Added guard for manipulated localStorage state (`onboardingComplete=true` with empty DOB)
+  - Added `inert` lock on main content while onboarding is active
+  - Main content unlocks only after validated DOB is saved
+- **Focus View (new mode)**
+  - New split layout: current-year weeks (right), live clock (left top), notes list (left bottom)
+  - Supports note editing through existing week dot interactions
+  - Focus notes auto-refresh after dialog close/save
+  - Improved note-dot highlight rendering (no broken grid) and boosted light-theme contrast
+- **SEO & Sharing**
+  - Added full OpenGraph metadata
+  - Added Twitter/X card metadata
+  - Added/updated meta description
+- **Testing & Quality**
+  - Migrated lint/format workflow to `oxlint` + `oxfmt`
+  - Added Playwright E2E suite (`57` passing tests)
+  - Added scripts: `test:e2e`, `test:e2e:ui`, `test:e2e:headed`, `test:e2e:report`
+
 ## v0.6.0 - [2026/02/15]
 
 - **Build System**: Migrate from Vite to Bun v1.3.6+

@@ -1,7 +1,7 @@
 export const onboardingScreen1: HTMLElement = (() => {
-    const template: HTMLTemplateElement = document.createElement('template');
+  const template: HTMLTemplateElement = document.createElement("template");
 
-    template.innerHTML = `
+  template.innerHTML = `
   <div id="onboarding-screen-1"
        class="px-10 text-slate-50 fixed w-full h-screen top-0 left-0 flex flex-col justify-center items-center glass overlay text-center">
       <div class="w-full">
@@ -39,5 +39,5 @@ export const onboardingScreen1: HTMLElement = (() => {
         </div>
   </div>`;
 
-    return template.content.firstElementChild as HTMLElement;
+  return template.content.firstElementChild as HTMLElement;
 })();

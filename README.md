@@ -2,48 +2,76 @@
 
 <img src="public/logo.webp" width="1024" alt="DotCalendar Logo" style="width: 80px">
 
-----
+---
 
 ## About
 
-Dot live calendar that displays the weeks you have lived as if you lived 100 years. It helps to pay attention to the
-transience of life, which allows you to make more global plans, because 1 point - 1 week
+DotCalendar is a single-page web app that visualizes life in weeks.
+Each dot is one week. You can set your date of birth, see lived vs remaining weeks,
+and keep notes per week.
+
+## What's New in v0.7.0
+
+- ES2025 target with Bun build splitting
+- Accessibility and motion improvements (skip link, reduced-motion support, improved keyboard behavior)
+- Required DOB onboarding with `inert` protection against UI bypass
+- OpenGraph and Twitter/X metadata
+- Focus View: split layout with current-year weeks, live clock, and year notes panel
+- Full Playwright E2E coverage (`57` tests)
 
 ## Requirements
 
-- Bun v1.3.0 or higher
+- Bun `>= 1.3.14`
 
-### Installation
-
-Install the dependencies
+## Install
 
 ```bash
 bun install
 ```
 
-### Usage (development)
-
-Run the development server
+## Development
 
 ```bash
 bun run dev
 ```
 
-### Usage (production)
-
-Build the project and run the server
+## Production
 
 ```bash
 bun run build
 bun run preview
 ```
 
-For production build recommended to use any static server, for example **Nginx**
+## Quality Checks
+
+```bash
+bun test src/
+bun run lint
+bun run build
+bun run test:e2e
+```
+
+### Test Scripts
+
+- `bun test src/` — unit tests (`bun:test`)
+- `bun run test:e2e` — Playwright E2E (headless)
+- `bun run test:e2e:headed` — Playwright E2E (headed)
+- `bun run test:e2e:ui` — Playwright UI mode
+- `bun run test:e2e:report` — open Playwright HTML report
+
+## Tech Stack
+
+- TypeScript (strict)
+- Bun (build/dev/test runtime)
+- Tailwind CSS v4
+- date-fns v4
+- oxlint + oxfmt
+- Playwright (`@playwright/test`)
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the tags on this repository.
+The project follows [SemVer](https://semver.org/).
 
 ## License
 
-This project is licensed under the MIT - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See [LICENSE](LICENSE).
