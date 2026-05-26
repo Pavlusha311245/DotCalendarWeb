@@ -15,3 +15,7 @@ dist
 .env*
 !.env.example
 .wrangler/
+
+# Playwright
+playwright-report/
+test-results/

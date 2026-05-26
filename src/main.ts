@@ -1,5 +1,10 @@
 import { addYears } from "date-fns";
-import { getDateOfBirth, initStorage, setDateOfBirth, setOnboardingStatus } from "./utils/storage.ts";
+import {
+  getDateOfBirth,
+  initStorage,
+  setDateOfBirth,
+  setOnboardingStatus,
+} from "./utils/storage.ts";
 import {
   calculatePassedAndRemainingWeeks,
   calculateWeeksInYears,
@@ -161,8 +166,7 @@ document.addEventListener("dot:click", (event: Event): void => {
 });
 
 // Focus view helpers
-const getFocusView = (): FocusView | null =>
-  document.querySelector<FocusView>("focus-view");
+const getFocusView = (): FocusView | null => document.querySelector<FocusView>("focus-view");
 
 const setupFocusViewToggle = (): void => {
   const btn = document.getElementById("focus-view-toggle");
@@ -201,16 +205,22 @@ window.onload = function (): void {
   initTheme();
 
   // Progress bar fallback for browsers without scroll-driven animation support
-  if (!CSS.supports("animation-timeline", "scroll()") &&
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if (
+    !CSS.supports("animation-timeline", "scroll()") &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
     const progressBar = document.getElementById("progress") as HTMLElement | null;
     if (progressBar) {
-      window.addEventListener("scroll", (): void => {
-        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-        const scrolled = window.scrollY;
-        const ratio = scrollable > 0 ? scrolled / scrollable : 0;
-        progressBar.style.transform = `scaleX(${ratio})`;
-      }, { passive: true });
+      window.addEventListener(
+        "scroll",
+        (): void => {
+          const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+          const scrolled = window.scrollY;
+          const ratio = scrollable > 0 ? scrolled / scrollable : 0;
+          progressBar.style.transform = `scaleX(${ratio})`;
+        },
+        { passive: true },
+      );
     }
   }
 

@@ -28,9 +28,7 @@ export const startOnboarding = (): void => {
 
     const dobInput = document.getElementById("onboarding-dob") as HTMLInputElement;
     const errorEl = document.getElementById("onboarding-dob-error") as HTMLElement;
-    const gotItButton = document.getElementById(
-      "onboarding-screen-2-got-it",
-    ) as HTMLButtonElement;
+    const gotItButton = document.getElementById("onboarding-screen-2-got-it") as HTMLButtonElement;
 
     // Enable button only when a valid date is entered
     dobInput.addEventListener("input", () => {

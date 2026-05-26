@@ -353,30 +353,19 @@
 
     /* Highlight dots that have notes */
     .dot.dot-has-notes {
-        box-shadow: 0 0 0 2px var(--color-bright-blue),
-                    0 0 8px var(--color-bright-blue),
-                    0 4px 12px rgba(193, 232, 255, 0.4);
+        box-shadow: inset 0 0 0 2px var(--color-bright-blue),
+                    0 0 6px 1px rgba(193, 232, 255, 0.35);
         position: relative;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .dot.dot-has-notes::after {
-            content: '';
-            position: absolute;
-            inset: -3px;
-            border-radius: inherit;
-            border: 2px solid var(--color-bright-blue);
-            opacity: 0.5;
-            animation: pulse 2s ease-in-out infinite;
+        @keyframes pulse {
+            0%, 100% { box-shadow: inset 0 0 0 2px var(--color-bright-blue), 0 0 4px 1px rgba(193, 232, 255, 0.2); }
+            50%       { box-shadow: inset 0 0 0 2px var(--color-bright-blue), 0 0 10px 3px rgba(193, 232, 255, 0.5); }
         }
 
-        @keyframes pulse {
-            0%, 100% {
-                box-shadow: 0 0 0 0 rgba(193, 232, 255, 0.7);
-            }
-            50% {
-                box-shadow: 0 0 0 4px rgba(193, 232, 255, 0);
-            }
+        .dot.dot-has-notes {
+            animation: pulse 2.5s ease-in-out infinite;
         }
     }
 
@@ -738,6 +727,34 @@
         overflow-y: auto;
         align-content: flex-start;
         flex: 1;
+    }
+
+    /* Light theme: increase contrast for focus-view metadata and note captions */
+    html[data-theme="light"] .focus-date,
+    html[data-theme="light"] .focus-week-count,
+    html[data-theme="light"] .focus-notes-title,
+    html[data-theme="light"] .focus-note-week {
+        color: var(--color-bright-blue);
+        opacity: 1;
+    }
+
+    html[data-theme="light"] .focus-date,
+    html[data-theme="light"] .focus-note-week {
+        font-weight: 600;
+    }
+
+    html[data-theme="light"] .focus-note-item {
+        background: rgba(5, 38, 89, 0.18);
+        border-color: rgba(5, 38, 89, 0.35);
+    }
+
+    html[data-theme="light"] .focus-no-notes {
+        color: var(--color-bright-blue);
+        opacity: 0.9;
+    }
+
+    html[data-theme="light"] .focus-note-text {
+        color: var(--color-text-light);
     }
 
     /* ─── End Focus View ───────────────────────────────────────────────── */

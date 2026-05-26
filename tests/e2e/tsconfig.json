@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2025"],
+    "types": ["node"],
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "module": "CommonJS"
+  },
+  "include": [
+    "./**/*.ts",
+    "../../playwright.config.ts"
+  ]
+}
