@@ -40,6 +40,13 @@ export class NoteDialog extends HTMLDialogElement {
     if (saveButton) {
       saveButton.addEventListener("click", () => this.save());
     }
+
+    // Light dismiss: close when clicking the backdrop (outside dialog content)
+    this.addEventListener("click", (e: MouseEvent) => {
+      if (e.target === this) {
+        this.close();
+      }
+    });
   }
 
   openNote(weekId: string) {

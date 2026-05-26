@@ -13,6 +13,7 @@ await Bun.build({
   target: "browser",
   sourcemap: "linked",
   minify: true,
+  splitting: true,
 });
 await Bun.$`cp -r public/* dist/`;
 

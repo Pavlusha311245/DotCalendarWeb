@@ -67,7 +67,7 @@ export const renderYearsList = (
     const flexDivElement: HTMLElement = renderDotsWeek({ year, weeksCount }, dob, startDate);
     const outerDivElement: HTMLElement = createElementWithClass(
       "div",
-      "flex gap-5 items-center",
+      "flex gap-5 items-center year-group",
       "",
     );
     outerDivElement.setAttribute("role", "group");

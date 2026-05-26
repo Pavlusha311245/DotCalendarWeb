@@ -21,11 +21,13 @@ export class CalendarDot extends HTMLElement {
 
     this.addEventListener("click", this.onClick);
     this.addEventListener("keydown", this.onKeyDown);
+    this.addEventListener("keyup", this.onKeyUp);
   }
 
   disconnectedCallback() {
     this.removeEventListener("click", this.onClick);
     this.removeEventListener("keydown", this.onKeyDown);
+    this.removeEventListener("keyup", this.onKeyUp);
   }
 
   private checkForNotes(): void {
@@ -60,8 +62,16 @@ export class CalendarDot extends HTMLElement {
   };
 
   private onKeyDown = (event: KeyboardEvent) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
+    if (event.key === "Enter") {
+      this.onClick();
+    }
+    if (event.key === " ") {
+      event.preventDefault(); // prevent page scroll on Space keydown
+    }
+  };
+
+  private onKeyUp = (event: KeyboardEvent) => {
+    if (event.key === " ") {
       this.onClick();
     }
   };

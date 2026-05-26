@@ -1,9 +1,30 @@
 # CHANGELOG
 
-## v0.7.0 - [2026/xx/xx]
+## v0.7.0 - [2026/05/26]
 
+- **ES2025**: TypeScript `lib` and `target` set to `ES2025`; Bun build uses `splitting: true`
+- **Performance**:
+  - Scroll progress bar uses compositor-thread `transform: scaleX()` instead of `width` animation
+  - `content-visibility: auto` on year-group rows for deferred off-screen rendering
+  - JS fallback for scroll progress bar in Firefox (no scroll-driven animation support)
+- **Accessibility**:
+  - Skip-to-content link + `tabindex="-1"` on `<main>`
+  - `aria-hidden="true"` on decorative scroll progress bar (was `role="progressbar"`)
+  - `visually-hidden` utility class + `.skip-link` styling
+  - `@media (prefers-reduced-motion: reduce)` disables all animations/transitions
+  - Pulse animation (notes indicator) gated behind `prefers-reduced-motion: no-preference`
+  - Keyboard fix in `CalendarDot`: Enter fires on `keydown`, Space fires on `keyup` (ARIA spec)
+- **UX**:
+  - Light-dismiss dialog: clicking the backdrop closes the note dialog
+  - Dialog animates both **in and out** (`overlay` + `transition-behavior: allow-discrete`)
+  - Backdrop also fades in/out with `@starting-style`
 - **Code Quality**:
-  - Replaces eslint with oxclint for improved linting performance and accuracy
+  - `calculatePassedAndRemainingWeeks` refactored to pure `Array.reduce` (no mutable state)
+  - `startOfCurrentYear` hoisted outside the reduce loop (computed once)
+  - oxlint + oxfmt replace ESLint/Prettier
+  - TypeScript upgraded to `^6.0.2`
+  - Bun upgraded to `1.3.14`
+- **Meta**: Added `<meta name="description">` for SEO
 
 ## v0.6.0 - [2026/02/15]
 

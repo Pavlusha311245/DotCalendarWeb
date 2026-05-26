@@ -8,24 +8,28 @@
 - **Type**: Frontend Web Application (SPA)
 - **Languages**: TypeScript, HTML, CSS
 - **Primary Frameworks**: Tailwind CSS v4, date-fns v4
-- **Build System**: Bun v1.3.6+ (replaces Vite as of v0.6.0)
-- **Runtime**: Modern browsers (ESNext target)
+- **Build System**: Bun v1.3.14+ (replaces Vite as of v0.6.0)
+- **Runtime**: Modern browsers (ES2025 target)
 - **Deployment**: Static site hosting or Cloudflare Workers (wrangler)
 - **License**: MIT (Open Source)
 - **Status**: Open Source Project - Community contributions welcome
 - **Repository Size**: Small (~25MB with node_modules)
 
 ### Current Version
-- **v0.6.0** (in development, updated from Vite to Bun)
-- **Latest Updates** (January 25, 2026):
+- **v0.7.0** (released May 26, 2026)
+- **Latest Updates** (May 26, 2026):
+  - ES2025 target — `tsconfig.json` lib set to `ES2025`, Bun build uses `splitting: true`
+  - `calculatePassedAndRemainingWeeks` refactored to pure `reduce` (no mutable state)
+  - Modern web improvements: `content-visibility`, `prefers-reduced-motion`, skip link, light-dismiss dialog
+  - Proper dialog exit animations: `overlay` + `transition-behavior: allow-discrete`
+  - Scroll progress bar: compositor-thread `scaleX` + Firefox fallback
+  - Keyboard fix in `CalendarDot`: Enter on `keydown`, Space on `keyup` (ARIA spec)
+  - oxlint + oxfmt replace ESLint/Prettier
   - Cool Navy Blue color palette implementation (v1.0)
   - Glass morphism input field for date of birth
   - Full-width button styling for top navigation
-  - UI layout improvements for better mobile responsiveness
-  - Comprehensive design system documentation
   - Dark/Light theme toggle (dual theme support)
   - Mobile optimization with safe-area-inset support for notch/Dynamic Island
-  - Reduced padding for thin, compact blocks
 
 ---
 
@@ -60,12 +64,11 @@ favicon/                        # Favicon files (various sizes)
 ```
 
 ### Root Configuration Files
-- **package.json**: Scripts and dependencies
-- **tsconfig.json**: TypeScript strict mode enabled, DOM library included
-- **eslint.config.ts**: ESLint with JS, TypeScript, and CSS rules
+- **package.json**: Scripts and dependencies (`dev`, `build`, `preview`, `lint`, `lint:fix`, `fmt`, `fmt:check`, `test`)
+- **tsconfig.json**: TypeScript strict mode, `lib: ES2025`, DOM library included
 - **bunfig.toml**: Bun configuration (enables bun-plugin-tailwind for serve.static)
 - **wrangler.jsonc**: Cloudflare Workers deployment config
-- **build.ts**: Bun build script that bundles, minifies, and copies static files
+- **build.ts**: Bun build script that bundles, minifies, splits, and copies static files
 - **site.webmanifest**: PWA manifest
 - **.gitignore**: Ignores dist/, node_modules/, .wrangler/
 
@@ -84,9 +87,9 @@ favicon/                        # Favicon files (various sizes)
 ## Build and Development Workflow
 
 ### Prerequisites
-- **Bun v1.3.0 or higher** (currently using v1.3.6)
+- **Bun v1.3.14 or higher** (currently using v1.3.14)
   - Install: `curl -fsSL https://bun.sh/install | bash`
-  - Verify: `bun --version` should output version ≥ 1.3.0
+  - Verify: `bun --version` should output version ≥ 1.3.14
 
 ### Installation
 ```bash
@@ -135,16 +138,31 @@ bun run preview
 ```bash
 bun run lint
 ```
-- Command: `eslint .`
-- Checks TypeScript, JavaScript, and CSS files
-- Ignores: dist/, node_modules/, *.css (CSS files only checked for syntax)
-- No errors expected if code follows ESLint config
+- Command: `oxlint`
+- Checks TypeScript and JavaScript files via oxlint (Rust-based, fast)
+- Zero warnings and zero errors expected before committing
+- Config: rules defined in package.json or `.oxlintrc.json` (if present)
 
 ### Fix Linting Issues
 ```bash
 bun run lint:fix
 ```
 - Automatically fixes fixable linting issues
+
+### Code Formatting
+```bash
+bun run fmt
+```
+- Command: `oxfmt` — formats all TypeScript/JavaScript files
+- Run `bun run fmt:check` to verify formatting without writing changes
+
+### Run Tests
+```bash
+bun test
+```
+- Uses the built-in Bun test runner (`bun:test`)
+- Test files: `src/utils/date-calculation.test.ts` (13 tests)
+- All 13 tests must pass before committing logic changes to utilities
 
 ---
 
@@ -155,13 +173,13 @@ bun run lint:fix
    - Used in: utils/date-calculation.ts, main.ts
    - Specific function: `addYears()` for calculating end-of-life date
 
-2. **tailwindcss (^4.1.18)**: Utility-first CSS framework
+2. **tailwindcss (^4.2.2)**: Utility-first CSS framework
    - Imported in src/style.css as `@import 'tailwindcss'`
    - Build time processing via bun-plugin-tailwind
    - Glass morphism classes (.glass, .glass.overlay)
    - Custom classes: .btn, .btn-glass with variants
 
-3. **wrangler (^4.56.0)**: Cloudflare Workers CLI
+3. **wrangler (4.59.1)**: Cloudflare Workers CLI
    - For deployment, not required for local dev
    - Config: wrangler.jsonc
 
@@ -169,15 +187,25 @@ bun run lint:fix
    - Required for bundling Tailwind CSS
    - Configured in bunfig.toml
 
-5. **typescript (^5.9.3)**: With strict mode enabled
+5. **typescript (^6.0.2)**: With strict mode enabled
    - noUnusedLocals and noUnusedParameters enforced
 
+6. **oxlint (^1.57.0)**: Rust-based linter (replaces ESLint)
+   - Fast, no config required, run via `bun run lint` / `bun run lint:fix`
+
+7. **oxfmt (^0.42.0)**: Formatter (replaces Prettier)
+   - Run via `bun run fmt` / `bun run fmt:check`
+
+8. **@types/bun (^1.3.11)**: Bun type definitions
+   - Needed for `Bun.build`, `Bun.file`, `Bun.$` shell used in build.ts and tests
+
 ### TypeScript Configuration
-- **Target**: ESNext
+- **Target**: ES2025 (explicit — not ESNext)
+- **Lib**: `["DOM", "DOM.Iterable", "WebWorker", "ES2025"]`
 - **Module**: Preserve (Bun native ESM)
 - **Strict**: true (all strict checks enabled)
-- **No emit**: true (compilation only, no output generation)
-- Build system (Bun) handles actual transpilation
+- **No emit**: true (compilation only, Bun handles transpilation)
+- Build system (Bun) handles actual transpilation and bundling
 
 ### CSS and Styling
 - Tailwind v4 uses @starting-style for transitions (modern CSS)
@@ -323,29 +351,46 @@ All colors are defined in `src/style.css` `:root` scope and overridden for light
 ### Pre-commit Checks
 No automated CI/CD workflows currently configured. Before committing:
 
-1. **Always run linting**:
+1. **Always run tests**:
+   ```bash
+   bun test
+   ```
+   All 13 tests must pass (date-calculation.test.ts)
+
+2. **Always run linting**:
    ```bash
    bun run lint
    ```
-   Ensure zero errors and warnings
+   Ensure zero warnings and zero errors
 
-2. **Always build and verify**:
+3. **Always build and verify**:
    ```bash
    bun run build
    ```
    Ensure successful build with no errors
 
-3. **Optional: Test in browser**:
+4. **Optional: Format code**:
+   ```bash
+   bun run fmt
+   ```
+
+5. **Optional: Test in browser**:
    ```bash
    bun run dev
    ```
    Manually test in browser if making UI/UX changes
 
+### Testing
+- **Test runner**: Bun built-in (`bun test`)
+- **Test file**: `src/utils/date-calculation.test.ts` — 13 tests
+- **Import**: `import { describe, expect, test } from "bun:test"`
+- Covers `getRangeOfYears`, `calculateWeeksInYears`, `calculatePassedAndRemainingWeeks`
+- Run with `bun test` — output shows pass/fail per test
+
 ### Error Handling
-- No tests in codebase (none configured)
-- Validation is lint-pass and build-success only
 - DOM selectors use type assertions with `as HTMLElement` pattern
 - LocalStorage API assumes available (no fallback)
+- Scroll-driven animation has a JS fallback for Firefox in `main.ts`
 
 ---
 
@@ -371,9 +416,10 @@ No automated CI/CD workflows currently configured. Before committing:
 
 ### Date Calculations
 - Uses date-fns for all date operations
-- Assumes 52 weeks per year (no leap week handling)
+- Supports 52 and 53 ISO-week years (uses `getISOWeeksInYear`)
 - Life expectancy: 100 years from date of birth
 - Current year derived from system date
+- `calculatePassedAndRemainingWeeks` uses pure `Array.reduce` (no mutable state)
 
 ---
 
@@ -425,9 +471,9 @@ No automated CI/CD workflows currently configured. Before committing:
 - **Solution**: Ensure --watch flag is used: `bun run index.html --watch`
 - **Alternative**: Restart dev server manually
 
-**Issue**: ESLint errors for unused variables
-- **Solution**: This is enforced by tsconfig.json. Fix by removing unused vars or using them
-- **Exception**: Add `// eslint-disable-next-line` if intentional (rare)
+**Issue**: oxlint errors for unused variables
+- **Solution**: This is enforced by tsconfig.json (`noUnusedLocals`, `noUnusedParameters`). Remove unused vars or use them.
+- **Note**: Do NOT add `// eslint-disable` comments — the project uses oxlint, not ESLint
 
 **Issue**: localStorage is empty/not persisting
 - **Solution**: App uses localStorage; browser must support it (all modern browsers do)
@@ -478,17 +524,20 @@ This guide covers 95% of common tasks. Follow it to work efficiently without unn
 
 ## Quick Reference
 
-| Task              | Command                       |
-|-------------------|-------------------------------|
-| Install deps      | `bun install`                 |
-| Dev server        | `bun run dev`                 |
-| Build             | `bun run build`               |
-| Preview build     | `bun run preview`             |
-| Lint code         | `bun run lint`                |
-| Fix lint issues   | `bun run lint:fix`            |
-| Check Bun version | `bun --version` (need ≥1.3.0) |
+| Task              | Command                          |
+|-------------------|----------------------------------|
+| Install deps      | `bun install`                    |
+| Dev server        | `bun run dev`                    |
+| Build             | `bun run build`                  |
+| Preview build     | `bun run preview`                |
+| Run tests         | `bun test`                       |
+| Lint code         | `bun run lint`                   |
+| Fix lint issues   | `bun run lint:fix`               |
+| Format code       | `bun run fmt`                    |
+| Check formatting  | `bun run fmt:check`              |
+| Check Bun version | `bun --version` (need ≥1.3.14)   |
 
 ---
 
-**Last Updated**: January 25, 2026
+**Last Updated**: May 26, 2026
 **Maintained by**: Pavel Zavadski (pavel.zavadski@pavlusha.me)

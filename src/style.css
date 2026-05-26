@@ -62,17 +62,29 @@
         background: rgba(2, 16, 36, 0.4);
         backdrop-filter: blur(4px);
         -webkit-backdrop-filter: blur(4px);
+        transition: opacity var(--transition-duration) var(--transition-ease),
+                    overlay var(--transition-duration) allow-discrete,
+                    display var(--transition-duration) allow-discrete;
+
+        @starting-style {
+            opacity: 0;
+        }
     }
 
     dialog {
         opacity: 0;
+        translate: 0 -1rem;
         margin: auto;
         background-color: transparent;
-        transition: opacity var(--transition-duration) var(--transition-ease);
+        transition: opacity var(--transition-duration) var(--transition-ease),
+                    translate var(--transition-duration) var(--transition-ease),
+                    overlay var(--transition-duration) allow-discrete,
+                    display var(--transition-duration) allow-discrete;
     }
 
     dialog[open] {
         opacity: 1;
+        translate: 0 0;
 
         @starting-style {
             opacity: 0;
@@ -347,22 +359,24 @@
         position: relative;
     }
 
-    .dot.dot-has-notes::after {
-        content: '';
-        position: absolute;
-        inset: -3px;
-        border-radius: inherit;
-        border: 2px solid var(--color-bright-blue);
-        opacity: 0.5;
-        animation: pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-        0%, 100% {
-            box-shadow: 0 0 0 0 rgba(193, 232, 255, 0.7);
+    @media (prefers-reduced-motion: no-preference) {
+        .dot.dot-has-notes::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: inherit;
+            border: 2px solid var(--color-bright-blue);
+            opacity: 0.5;
+            animation: pulse 2s ease-in-out infinite;
         }
-        50% {
-            box-shadow: 0 0 0 4px rgba(193, 232, 255, 0);
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(193, 232, 255, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 4px rgba(193, 232, 255, 0);
+            }
         }
     }
 
@@ -373,19 +387,28 @@
 
     .progress {
         position: fixed;
+        left: 0;
+        top: 0;
         height: 0.5rem;
-        width: 0;
+        width: 100%;
         background-color: var(--color-bright-blue);
         border-radius: 0 4px 4px 0;
-        border: 2px solid var(--color-accent-blue);
         z-index: 9999;
-        animation: grow linear forwards;
-        animation-timeline: scroll();
+        transform: scaleX(0);
+        transform-origin: 0 50%;
     }
 
-    @keyframes grow {
-        to {
-            width: 100%;
+    @media (prefers-reduced-motion: no-preference) {
+        @supports (animation-timeline: scroll()) {
+            @keyframes grow-progress {
+                from { transform: scaleX(0); }
+                to { transform: scaleX(1); }
+            }
+
+            .progress {
+                animation: grow-progress auto linear;
+                animation-timeline: scroll();
+            }
         }
     }
 
@@ -463,6 +486,56 @@
     @media (min-width: 1024px) {
         h2 {
             font-size: 1.75rem;
+        }
+    }
+
+    /* Visually hidden utility — keeps content in accessibility tree but hides it visually.
+       :focus-within / :active opt elements out, useful for skip links. */
+    .visually-hidden:where(:not(:focus-within, :active)) {
+        position: absolute !important;
+        clip-path: inset(50%) !important;
+        overflow: hidden !important;
+        width: 1px !important;
+        height: 1px !important;
+        margin: -1px !important;
+        padding: 0 !important;
+        border: 0 !important;
+        white-space: nowrap !important;
+    }
+
+    /* Skip link visible state */
+    .skip-link:focus-within,
+    .skip-link:active {
+        position: fixed;
+        top: 0.75rem;
+        left: 50%;
+        translate: -50% 0;
+        z-index: 99999;
+        padding: 0.5rem 1rem;
+        background: var(--color-primary);
+        color: var(--color-text-light);
+        border: 2px solid var(--color-bright-blue);
+        border-radius: 0.5rem;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    /* Year group — content-visibility for deferred rendering of off-screen years */
+    .year-group {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 5rem;
+    }
+
+    /* Disable animations and transitions for users who prefer reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        ::after,
+        ::before,
+        ::backdrop {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
         }
     }
 }

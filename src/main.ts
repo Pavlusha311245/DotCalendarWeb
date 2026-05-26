@@ -1,5 +1,5 @@
 import { addYears } from "date-fns";
-import { getDateOfBirth, initStorage, setDateOfBirth } from "./utils/storage.ts";
+import { getDateOfBirth, initStorage, setDateOfBirth, setOnboardingStatus } from "./utils/storage.ts";
 import {
   calculatePassedAndRemainingWeeks,
   calculateWeeksInYears,
@@ -158,7 +158,33 @@ document.addEventListener("dot:click", (event: Event): void => {
 window.onload = function (): void {
   initTheme();
 
+  // Progress bar fallback for browsers without scroll-driven animation support
+  if (!CSS.supports("animation-timeline", "scroll()") &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const progressBar = document.getElementById("progress") as HTMLElement | null;
+    if (progressBar) {
+      window.addEventListener("scroll", (): void => {
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        const scrolled = window.scrollY;
+        const ratio = scrollable > 0 ? scrolled / scrollable : 0;
+        progressBar.style.transform = `scaleX(${ratio})`;
+      }, { passive: true });
+    }
+  }
+
+  // Guard: if onboarding is marked done but DOB is missing (e.g. localStorage was
+  // manually edited via DevTools), reset onboarding so the user must re-enter their DOB.
+  if (isOnboardingComplete() && !getDateOfBirth()) {
+    setOnboardingStatus(false);
+  }
+
+  const mainSection = document.getElementById("main-section") as HTMLElement | null;
+
   if (!isOnboardingComplete()) {
+    // Block all interaction with the calendar/footer while onboarding is active.
+    // Even if the onboarding overlay is deleted from the DOM via DevTools, the
+    // section remains inert and cannot be focused, clicked, or tabbed into.
+    if (mainSection) mainSection.inert = true;
     startOnboarding();
   }
 

@@ -67,16 +67,16 @@ export const calculatePassedAndRemainingWeeks = (
   yearsAndWeeks: YearWeeks[],
   currentDate: Date,
 ): WeeksInfo => {
-  let totalWeeks: number = 0;
-  let passedWeeks: number = 0;
-  for (const yearData of yearsAndWeeks) {
-    totalWeeks += yearData.weeksCount;
-    if (yearData.year < currentDate.getFullYear()) {
-      passedWeeks += yearData.weeksCount;
-    } else if (yearData.year == currentDate.getFullYear()) {
-      const startOfYear = startOfWeek(new Date(yearData.year, 0, 1));
-      passedWeeks += differenceInWeeks(currentDate, startOfYear);
-    }
-  }
+  const currentYear = currentDate.getFullYear();
+  const startOfCurrentYear = startOfWeek(new Date(currentYear, 0, 1));
+
+  const totalWeeks = yearsAndWeeks.reduce((sum, { weeksCount }) => sum + weeksCount, 0);
+
+  const passedWeeks = yearsAndWeeks.reduce((sum, { year, weeksCount }) => {
+    if (year < currentYear) return sum + weeksCount;
+    if (year === currentYear) return sum + differenceInWeeks(currentDate, startOfCurrentYear);
+    return sum;
+  }, 0);
+
   return { totalWeeks, passedWeeks, remainingWeeks: totalWeeks - passedWeeks };
 };
